@@ -1,25 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { Home } from "./components/Home";
+import { Detail } from "./components/Detail";
+import { ShowDetail } from "./components/ShowDetail";
+import { Shows } from "./components/Shows";
+
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <nav className="nav">
+        <div className="container">
+          <ul>
+            <li className="brand">
+              <ion-icon name="logo-react"></ion-icon>
+            </li>
+            <li>
+              <Link to="/">Movies</Link>
+            </li>
+            <li>
+              <Link to="/shows">TV Shows</Link>
+            </li>
+            <li>
+              <Link to="#">
+                <ion-icon name="search-outline"></ion-icon>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
+        <Route path="/movie/:id">
+          <Detail />
+        </Route>
+        <Route path="/shows">
+          <Shows />
+        </Route>
+        <Route path="/show/:id">
+          <ShowDetail />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
