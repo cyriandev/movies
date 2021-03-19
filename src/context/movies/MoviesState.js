@@ -18,7 +18,13 @@ import {
     MOVIE_ERROR,
     GET_CAST,
     CAST_ERROR,
-    CAST_LOADING
+    CAST_LOADING,
+    GET_REVIEWS,
+    REVIEWS_ERROR,
+    REVIEWS_LOADING,
+    GET_VIDEOS,
+    VIDEOS_ERROR,
+    VIDEOS_LOADING
 } from '../types';
 
 
@@ -29,12 +35,16 @@ const MoviesState = ({ children }) => {
         popular: [],
         movie: [],
         cast: [],
+        reviews: [],
+        videos: [],
         error: null,
         playing_loading: false,
         movie_loading: false,
         top_rated_loading: false,
         popular_loading: false,
         cast_loading: false,
+        reviews_loading: false,
+        videos_loading: false,
 
     }
     const [state, dispatch] = useReducer(MoviesReducer, initialState);
@@ -135,6 +145,43 @@ const MoviesState = ({ children }) => {
         }
     }
 
+    // Get  Reviews (id)
+    const getReviews = async (id) => {
+
+        setReviewsLoading();
+        try {
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}/reviews?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            dispatch({
+                type: GET_REVIEWS,
+                payload: res.data.results
+            })
+        } catch (err) {
+            dispatch({
+                type: REVIEWS_ERROR,
+                payload: err.response.data
+            })
+            setTimeout(() => clearErrors(), 5000);
+        }
+    }
+    // Get  Videos (id)
+    const getVideos = async (id) => {
+
+        setVideosLoading();
+        try {
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            dispatch({
+                type: GET_VIDEOS,
+                payload: res.data.results
+            })
+        } catch (err) {
+            dispatch({
+                type: VIDEOS_ERROR,
+                payload: err.response.data
+            })
+            setTimeout(() => clearErrors(), 5000);
+        }
+    }
+
 
     // Clear Errors
     const clearErrors = () => dispatch({
@@ -147,6 +194,8 @@ const MoviesState = ({ children }) => {
     const setPopularLoading = () => dispatch({ type: POPULAR_LOADING })
     const setMovieLoading = () => dispatch({ type: MOVIE_LOADING })
     const setCastLoading = () => dispatch({ type: CAST_LOADING })
+    const setReviewsLoading = () => dispatch({ type: REVIEWS_LOADING })
+    const setVideosLoading = () => dispatch({ type: VIDEOS_LOADING })
 
 
     return <MoviesContext.Provider
@@ -157,16 +206,21 @@ const MoviesState = ({ children }) => {
             cast: state.cast,
             top_rated: state.top_rated,
             popular: state.popular,
+            reviews: state.reviews,
             plying_loading: state.plying_loading,
             cast_loading: state.cast_loading,
             movie_loading: state.movie_loading,
             top_rated_loading: state.top_rated_loading,
             popular_loading: state.popular_loading,
+            reviews_loading: state.reviews_loading,
+            videos_loading: state.videos_loading,
             getPlaying,
             getTopRated,
             getPopular,
             getMovie,
             getCast,
+            getReviews,
+            getVideos,
 
         }}
     >

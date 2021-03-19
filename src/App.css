@@ -80,10 +80,28 @@ ul {
 }
 
 
-.movie, .cast{
+.movie, .cast , .review{
   background-color: rgb(36, 37, 38);
   margin: .2rem
 }
+
+.review{
+  color: #fff;
+  padding: 20px;
+}
+
+.author{
+  margin-left: 15px;
+  font-size: 20px;
+  margin-bottom: 0;
+}
+
+.review-date, .review-content{
+  font-size: 13px;
+  color: #7A7A7A;
+}
+
+
 
 .label{
   color: #fff;
@@ -197,4 +215,36 @@ ul {
 
 .md{
   font-size: 12px;
+}
+
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.modal-content{
+  background-color: rgb(36, 37, 38);
+}
+.modal-body{
+  color: #7A7A7A;
+  font-size: 14px;
+}
+
+.btn-close{
+  color: #7A7A7A !important;
+}
+
+.btn-close:focus{
+  outline: none;
+  border: none;
+}
+
+.modal-title{
+  font-size: 16px;
+}
+
+.modal-header{
+  border: none;
 }

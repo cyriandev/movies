@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Detail } from "./components/Detail";
 import { Shows } from "./components/Shows";
@@ -9,6 +9,31 @@ import MoviesState from './context/movies/MoviesState';
 import "./App.css";
 
 function App() {
+
+  const [connection, setConnection] = useState(true)
+
+  useEffect(() => {
+
+    window.addEventListener("offline", (event) => {
+      setConnection(false);
+    });
+
+    window.addEventListener("online", (event) => {
+      setConnection(true);
+    });
+
+  }, [])
+
+
+  if (!connection) {
+    return (<div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+      <div className="text-center">
+        <h1 className="text-light">You're Offline</h1>
+        <p className="text-muted">Check you network connection, and reload the page</p>
+      </div>
+    </div>)
+  }
+
   return (
     <MoviesState>
       <Router>

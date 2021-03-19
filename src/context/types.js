@@ -3,17 +3,23 @@ export const TOP_RATED_LOADING = "TOP_RATED_LOADING";
 export const POPULAR_LOADING = "POPULAR_LOADING";
 export const MOVIE_LOADING = "MOVIE_LOADING";
 export const CAST_LOADING = "CAST_LOADING";
+export const REVIEWS_LOADING = "REVIEWS_LOADING";
+export const VIDEOS_LOADING = "VIDEOS_LOADING";
 
 export const GET_PLAYING = "GET_PLAYONG";
 export const GET_TOP_RATED = "GET_TOP_RATED";
 export const GET_POPULAR = "GET_POPULAR";
 export const GET_MOVIE = "GET_MOVIE";
 export const GET_CAST = "GET_CAST";
+export const GET_REVIEWS = "GET_REVIEWS";
+export const GET_VIDEOS = "GET_VIDEOS";
 
 export const PLAYING_ERROR = "PLAYING_ERROR";
 export const TOP_RATED_ERROR = "TOP_RATED_ERROR";
 export const POPULAR_ERROR = "POPULAR_ERROR";
 export const MOVIE_ERROR = "MOVIE_ERROR";
 export const CAST_ERROR = "CAST_ERROR";
+export const REVIEWS_ERROR = "REVIEWS_ERROR";
+export const VIDEOS_ERROR = "VIDEOS_ERROR";
 
 export const CLEAR_ERRORS = "CLEAR_ERRORS";

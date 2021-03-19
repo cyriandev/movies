@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import moment from "moment";
 import MoviesContext from '../context/movies/moviesContext';
 import Cast from './Cast';
+import Review from "./Review";
 
 export const Detail = () => {
   let { id } = useParams();
@@ -13,13 +14,22 @@ export const Detail = () => {
     movie,
     getCast,
     cast_loading,
-    cast
+    cast,
+    getReviews,
+    reviews_loading,
+    reviews,
+    getVideos,
+    videos_loading,
+    videos
   } = moviesContext;
 
 
   useEffect(() => {
     getMovie(id);
     getCast(id);
+    getReviews(id);
+    getVideos(id);
+    // eslint-disable-next-line
   }, [id]);
 
   if (movie_loading) {
@@ -37,24 +47,32 @@ export const Detail = () => {
             <div className="d-flex align-items-center col-md-8">
               <div className="mt-5 descr">
                 <h1>{movie.title} ({moment(movie.release_date).format("YYYY")})</h1>
-                <p>   {movie.tagline} &nbsp;&nbsp;<span>&bull;</span>&nbsp;&nbsp;
+                <p>{Math.floor(movie.runtime / 60)} h {movie.runtime % 60} m &nbsp;&nbsp;<span>&bull;</span>&nbsp;&nbsp;
 
                {moment(movie.release_date).format("DD MMMM YYYY")}
-                 &nbsp;&nbsp;<span>&bull;</span>&nbsp;&nbsp;{Math.floor(movie.runtime / 60)} h {movie.runtime % 60} m</p>
+                 &nbsp;&nbsp;<span>&bull;</span>&nbsp;&nbsp; {movie.tagline} </p>
 
                 <h3>Overview</h3>
                 <p>{movie.overview}</p>
+                {/* {
+                  videos_loading ? 'Loading...' : (
+                    videos ?
+                      <a
+                        href={`https://www.youtube.com/watch?v=${videos[0].id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Play trailar
+            </a> : ""
+
+                  )
+                } */}
+
               </div>
             </div>
           </div>
         </div>
       </div>
-
-
-
-
-
-
 
 
 
@@ -65,7 +83,7 @@ export const Detail = () => {
             <button style={{ paddingLeft: 0, }} className="nav-link active md" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Cast</button>
           </li>
           <li className="nav-item" role="presentation">
-            <button className="nav-link md" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Reviews</button>
+            <button className="nav-link md" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Reviews ({reviews_loading ? '0' : reviews.length})</button>
           </li>
           {/* <li className="nav-item" role="presentation">
             <button className="nav-link md" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">TV</button>
@@ -91,7 +109,12 @@ export const Detail = () => {
           <div className="tab-pane  mt-5" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <div className="row g-0">
 
-
+              {
+                reviews_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
+                  reviews.map((item, index) => (
+                    <Review key={index} item={item} />
+                  ))
+              }
 
             </div>
           </div>

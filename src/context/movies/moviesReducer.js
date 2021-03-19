@@ -14,7 +14,13 @@ import {
     MOVIE_ERROR,
     GET_CAST,
     CAST_ERROR,
-    CAST_LOADING
+    CAST_LOADING,
+    GET_REVIEWS,
+    REVIEWS_ERROR,
+    REVIEWS_LOADING,
+    GET_VIDEOS,
+    VIDEOS_ERROR,
+    VIDEOS_LOADING
 } from '../types';
 
 
@@ -24,6 +30,11 @@ export default (state, action) => {
             return {
                 ...state,
                 playing_loading: true
+            }
+        case VIDEOS_LOADING:
+            return {
+                ...state,
+                videos_loading: true
             }
         case CAST_LOADING:
             return {
@@ -46,12 +57,23 @@ export default (state, action) => {
                 ...state,
                 movie_loading: true
             }
+        case REVIEWS_LOADING:
+            return {
+                ...state,
+                reviews_loading: true
+            }
 
         case GET_PLAYING:
             return {
                 ...state,
                 playing: action.payload,
                 playing_loading: false
+            }
+        case GET_VIDEOS:
+            return {
+                ...state,
+                videos: action.payload,
+                videos_loading: false
             }
         case GET_CAST:
             return {
@@ -77,12 +99,24 @@ export default (state, action) => {
                 top_rated: action.payload,
                 top_rated_loading: false
             }
+        case GET_REVIEWS:
+            return {
+                ...state,
+                reviews: action.payload,
+                reviews_loading: false
+            }
 
         case PLAYING_ERROR:
             return {
                 ...state,
                 error: action.payload,
                 playing_loading: false
+            }
+        case VIDEOS_ERROR:
+            return {
+                ...state,
+                error: action.payload,
+                videos_loading: false
             }
         case MOVIE_ERROR:
             return {
@@ -107,6 +141,12 @@ export default (state, action) => {
                 ...state,
                 error: action.payload,
                 top_rated_loading: false
+            }
+        case REVIEWS_ERROR:
+            return {
+                ...state,
+                error: action.payload,
+                reviews_loading: false
             }
         case CLEAR_ERRORS:
             return {
