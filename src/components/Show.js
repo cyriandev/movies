@@ -4,7 +4,7 @@ import moment from "moment";
 
 export const Show = ({ show }) => {
   return (
-    <div className="movie">
+    <div className="col-lg-2 col-md-3 col-sm-3 movie">
       <Link to={`/show/${show.id}`}>
         <div className="poster">
           <img

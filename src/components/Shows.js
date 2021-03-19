@@ -28,11 +28,10 @@ export const Shows = () => {
         <h1 className="heading" style={{ marginBottom: 30 }}>
           Tv Shows
         </h1>
-        <div className="movie-container grid-cols-4 gap-2">
-          <div className="movie" style={{ height: 500 }}></div>
-          <div className="movie" style={{ height: 500 }}></div>
-          <div className="movie" style={{ height: 500 }}></div>
-          <div className="movie" style={{ height: 500 }}></div>
+        <div className="row gap-2">
+          <div className="col movie" style={{ height: 500 }}></div>
+          <div className="col movie" style={{ height: 500 }}></div>
+          <div className="col movie" style={{ height: 500 }}></div>
         </div>
       </div>
     );
@@ -42,7 +41,7 @@ export const Shows = () => {
       <h1 className="heading" style={{ marginBottom: 30 }}>
         Tv Shows
       </h1>
-      <div className="movie-container grid-cols-4 gap-2">
+      <div className="row gap-2 justify-content-center">
         {shows.results.map(show => (
           <Show key={show.id} show={show} />
         ))}
