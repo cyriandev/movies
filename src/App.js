@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Detail } from "./components/Detail";
 import { Shows } from "./components/Shows";
 import Landing from './components/Landing';
+import Tv from './components/Tv';
+import Nav from './components/Nav';
 
 import MoviesState from './context/movies/MoviesState';
 
@@ -37,9 +39,18 @@ function App() {
   return (
     <MoviesState>
       <Router>
+
+        <Nav />
         <Switch>
+
           <Route exact path="/">
             <Landing />
+          </Route>
+          <Route path="/movies">
+            <Landing />
+          </Route>
+          <Route exact path="/tv">
+            <Tv />
           </Route>
           <Route path="/movie/:id">
             <Detail />

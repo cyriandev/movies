@@ -248,3 +248,43 @@ ul {
 .modal-header{
   border: none;
 }
+
+.search{
+  border: none;
+  background-color: rgb(54, 56, 58);
+  font-size: 13px;
+  color: #7A7A7A;
+}
+.search:focus, .search:active, .btn-close:focus, .btn-close:active {
+outline: none;
+border: none;
+ box-shadow: none;
+}
+
+.navbar-dark .navbar-toggler:active, .navbar-dark .navbar-toggler:focus{
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.search-wrapper{
+  background-color: rgb(54, 56, 58);
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+.bg-dark{
+ background-color: #27292c !important;
+}
+
+.my-btn{
+  border: none;
+  background-color: rgb(54, 56, 58);
+}
+
+.my-icon{
+  font-size: 20px;
+  color: red
+}
+
+.nav-link{
+  font-size: 14px;
+}

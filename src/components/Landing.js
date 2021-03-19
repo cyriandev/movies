@@ -91,9 +91,9 @@ const Landing = () => {
                 <li className="nav-item" role="presentation">
                     <button className="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">MOST POPULAR</button>
                 </li>
-                <li className="nav-item" role="presentation">
+                {/* <li className="nav-item" role="presentation">
                     <button className="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">TV</button>
-                </li>
+                </li> */}
             </ul>
             <div className="tab-content" id="myTabContent">
                 <div className="tab-pane  show active mt-5" id="home" role="tabpanel" aria-labelledby="home-tab">
