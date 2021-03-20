@@ -4,6 +4,7 @@ import moment from "moment";
 import MoviesContext from '../context/movies/moviesContext';
 import Cast from './Cast';
 import Review from "./Review";
+import Video from "./Video";
 
 export const Detail = () => {
   let { id } = useParams();
@@ -54,20 +55,6 @@ export const Detail = () => {
 
                 <h3>Overview</h3>
                 <p>{movie.overview}</p>
-                {/* {
-                  videos_loading ? 'Loading...' : (
-                    videos ?
-                      <a
-                        href={`https://www.youtube.com/watch?v=${videos[0].id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Play trailar
-            </a> : ""
-
-                  )
-                } */}
-
               </div>
             </div>
           </div>
@@ -85,9 +72,9 @@ export const Detail = () => {
           <li className="nav-item" role="presentation">
             <button className="nav-link md" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Reviews ({reviews_loading ? '0' : reviews.length})</button>
           </li>
-          {/* <li className="nav-item" role="presentation">
-            <button className="nav-link md" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">TV</button>
-          </li> */}
+          <li className="nav-item" role="presentation">
+            <button className="nav-link md" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Videos ({videos_loading ? '0' : videos.length})</button>
+          </li>
         </ul>
         <div className="tab-content" id="myTabContent">
           <div className="tab-pane  show active mt-2" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -118,38 +105,16 @@ export const Detail = () => {
 
             </div>
           </div>
-          <div className="tab-pane  mt-5" id="contact" role="tabpanel" aria-labelledby="contact-tab"> <p className="label">Movies</p>
+          <div className="tab-pane  mt-5" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div className="row g-0">
-              <div className="col-md-3">
-                <div className="movie">
-                  Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-              </div>
-              <div className="col-md-3">
-                <div className="movie">
-                  Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-              </div>
-              <div className="col-md-3">
-                <div className="movie">
-                  Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-              </div>
-              <div className="col-md-3">
-                <div className="movie">
-                  Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-              </div>
-              <div className="col-md-3">
-                <div className="movie">
-                  Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-              </div>
-              <div className="col-md-3">
-                <div className="movie">
-                  Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-              </div>
+              {
+                videos_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> : (
+                  videos.map((item, index) => (
+                    <Video key={index} video={item} />
+                  ))
+                )
+              }
+
 
             </div></div>
         </div>

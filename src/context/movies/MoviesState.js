@@ -204,6 +204,7 @@ const MoviesState = ({ children }) => {
             playing: state.playing,
             movie: state.movie,
             cast: state.cast,
+            videos: state.videos,
             top_rated: state.top_rated,
             popular: state.popular,
             reviews: state.reviews,

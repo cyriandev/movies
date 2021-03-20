@@ -261,7 +261,7 @@ border: none;
  box-shadow: none;
 }
 
-.navbar-dark .navbar-toggler:active, .navbar-dark .navbar-toggler:focus{
+.navbar-dark, .navbar-toggler:active, .navbar-dark .navbar-toggler:focus{
   border: none;
   outline: none;
   box-shadow: none;
@@ -287,4 +287,38 @@ border: none;
 
 .nav-link{
   font-size: 14px;
+}
+
+.vid{
+  color: #fff;
+  padding: 10px;
+}
+
+.vid p{
+  font-size: 13px;
+  margin: 0;
+
+}
+.vid ion-icon{
+  font-size: 55px;
+  margin-right: 10px;
+}
+
+.vid a{
+  color: #fff;
+}
+
+.searchM{
+  position: absolute;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: #27292c ;
+  display: none;
+}
+
+.searchM{
+  color: #fff;
 }
