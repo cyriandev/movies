@@ -1,27 +1,35 @@
-import React from 'react'
-import { Link } from "react-router-dom";
+import React, { useState } from 'react'
+import { NavLink, useHistory } from "react-router-dom";
 
 const Nav = () => {
+    let history = useHistory();
+    const [q, setq] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        history.push(`/search?q=${q}`);
+    }
+
     return (
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <Link to="/" class="navbar-brand">CNEMA</Link>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div className="container">
+                <NavLink to="/" activeClassName='active' className="navbar-brand">CNEMA</NavLink >
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <Link to="/movies" class="nav-link active" aria-current="page" >Movies</Link>
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li className="nav-item">
+                            <NavLink to="/movies" activeClassName='active' className="nav-link" aria-current="page" >Movies</NavLink >
                         </li>
-                        <li class="nav-item">
-                            <Link to="/tv" class="nav-link" >TV</Link>
+                        <li className="nav-item">
+                            <NavLink to="/tv" activeClassName='active' className="nav-link" >TV</NavLink >
                         </li>
                     </ul>
-                    <form class="d-flex">
+                    <form className="d-flex" onSubmit={handleSubmit}>
                         <div className="search-wrapper d-flex align-items-center">
-                            <input class="search me-2" type="search" placeholder="Search" aria-label="Search" />
-                            <button class="my-btn d-flex align-items-center" type="submit"><ion-icon className="my-icon" style={{ fontSize: 25, color: '#7A7A7A' }} name="search-outline"></ion-icon></button>
+                            <input className="search me-2" type="search" placeholder="Search" aria-label="Search" value={q} onChange={(e) => setq(e.target.value)} />
+                            <button className="my-btn d-flex align-items-center" type="submit"><ion-icon className="my-icon" style={{ fontSize: 25, color: '#7A7A7A' }} name="search-outline"></ion-icon></button>
                         </div>
                     </form>
                 </div>

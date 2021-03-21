@@ -80,7 +80,7 @@ ul {
 }
 
 
-.movie, .cast , .review{
+.movie, .cast , .review, .tv{
   background-color: rgb(36, 37, 38);
   margin: .2rem
 }
@@ -203,11 +203,15 @@ ul {
 .cta{
   color: #fff;
   padding: 10px;
-  border:  1px solid #fff;
+  /* border:  1px solid #fff; */
   display: inline-block;
   border-radius: 5px;
   font-size: 15px;
 }
+
+.cta ion-icon{
+  font-size: 20px;
+} 
 
 .cta:hover{
   color: #fff;
@@ -304,11 +308,16 @@ border: none;
   margin-right: 10px;
 }
 
+.controls ion-icon{
+  color: #fff;
+  font-size: 25px;
+}
+
 .vid a{
   color: #fff;
 }
 
-.searchM{
+/* .searchM{
   position: absolute;
   top: 56px;
   left: 0;
@@ -321,4 +330,29 @@ border: none;
 
 .searchM{
   color: #fff;
+} */
+
+.heading{
+  color: #fff;
+  font-size: 20px;
+}
+.badge{
+  font-size: 9px;
+  margin-right: 5px;
+}
+
+.seasons .detail{
+  padding-left: 30px;
+}
+
+.seasons .detail h1{
+  font-size: 20px;
+}
+.seasons .detail p{
+  color: #7A7A7A;
+  font-size: 15px;
+}
+
+.seasons img{
+  border-radius: 2px;
 }

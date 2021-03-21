@@ -20,7 +20,9 @@ import {
     REVIEWS_LOADING,
     GET_VIDEOS,
     VIDEOS_ERROR,
-    VIDEOS_LOADING
+    VIDEOS_LOADING,
+    RESULTS_LOADING,
+    GET_RESULTS
 } from '../types';
 
 
@@ -30,6 +32,11 @@ export default (state, action) => {
             return {
                 ...state,
                 playing_loading: true
+            }
+        case RESULTS_LOADING:
+            return {
+                ...state,
+                results_loading: true
             }
         case VIDEOS_LOADING:
             return {
@@ -68,6 +75,12 @@ export default (state, action) => {
                 ...state,
                 playing: action.payload,
                 playing_loading: false
+            }
+        case GET_RESULTS:
+            return {
+                ...state,
+                results: action.payload,
+                results_loading: false
             }
         case GET_VIDEOS:
             return {
@@ -129,6 +142,12 @@ export default (state, action) => {
                 ...state,
                 error: action.payload,
                 cast_loading: false
+            }
+        case REVIEWS_ERROR:
+            return {
+                ...state,
+                error: action.payload,
+                results_loading: false
             }
         case POPULAR_ERROR:
             return {

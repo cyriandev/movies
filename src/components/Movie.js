@@ -17,7 +17,7 @@ export const Movie = ({ movie }) => {
             />
           </div>
           <div className="details">
-            <h4>{movie.title}</h4>
+            <h4><span className="badge bg-light text-dark">{movie.original_language}</span> {movie.title}</h4>
             <div className="rate">
               <ion-icon name="star"></ion-icon>
               <p>{movie.vote_average * 10}% </p>

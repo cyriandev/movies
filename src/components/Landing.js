@@ -5,9 +5,6 @@ import MoviesContext from '../context/movies/moviesContext';
 import { Movie } from './Movie';
 import moment from "moment";
 
-
-
-
 const Landing = () => {
 
     const moviesContext = useContext(MoviesContext);
@@ -51,7 +48,7 @@ const Landing = () => {
                                 }}>
                                     <div className="slider">
                                         <div className="info">
-                                            {/* <p className="d-flex align-items-center" style={{ fontSize: 20 }}><ion-icon name="play-outline"></ion-icon> playing</p> */}
+                                            <span className="badge bg-light text-dark">Now Playing</span>
                                             <h1>
                                                 {item.title}
                                             </h1>
@@ -68,7 +65,10 @@ const Landing = () => {
                                             <p>
                                                 {item.overview}
                                             </p>
-                                            <Link to={`/movie/${item.id}`} className="cta mt-2">Learn More</Link>
+                                            <div>
+
+                                                <Link to={`/movie/${item.id}`} className="cta mt-2"> <span style={{ marginRight: 3 }}>Learn More</span></Link>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -80,24 +80,28 @@ const Landing = () => {
 
                 </div>
             </div>
+            <div className="controls">
+                <a href="#" style={{ marginRight: 18 }} type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev"><ion-icon name="chevron-back-outline"></ion-icon></a>
+                <a href="#" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next"><ion-icon name="chevron-forward-outline"></ion-icon></a>
+            </div>
 
 
 
 
-            <ul className="nav nav-tabs" id="myTab" role="tablist">
+            <ul className="nav nav-tabs mt-4" id="myTab" role="tablist">
                 <li className="nav-item" role="presentation">
-                    <button style={{ paddingLeft: 0 }} className="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">TOP RATED</button>
+                    <button style={{ paddingLeft: 0 }} className="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">MOST POPULAR</button>
                 </li>
                 <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">MOST POPULAR</button>
+                    <button className="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">TOP RATED</button>
                 </li>
                 {/* <li className="nav-item" role="presentation">
                     <button className="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">TV</button>
                 </li> */}
             </ul>
             <div className="tab-content" id="myTabContent">
-                <div className="tab-pane  show active mt-5" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    <p className="label">Movies</p>
+                <div className="tab-pane mt-5" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    {/* <p className="label">Movies</p> */}
                     <div className="row g-0">
                         {
                             top_rated_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
@@ -107,8 +111,8 @@ const Landing = () => {
                         }
                     </div>
                 </div>
-                <div className="tab-pane  mt-5" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <p className="label">Movies</p>
+                <div className="tab-pane  show active mt-5" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    {/* <p className="label">Movies</p> */}
                     <div className="row g-0">
 
                         {

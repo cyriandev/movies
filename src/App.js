@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Detail } from "./components/Detail";
-import { Shows } from "./components/Shows";
 import Landing from './components/Landing';
 import Tv from './components/Tv';
 import Nav from './components/Nav';
 import Search from './components/Search'
+import TvDetail from './components/TvDetail';
 
 import MoviesState from './context/movies/MoviesState';
+import TvState from './context/tv/TvState';
 
 import "./App.css";
 
@@ -39,30 +40,34 @@ function App() {
 
   return (
     <MoviesState>
-      <Router>
-        <>
-          <Nav />
-          <Search />
-          <Switch>
+      <TvState>
+        <Router>
+          <>
+            <Nav />
+            <Switch>
 
-            <Route exact path="/">
-              <Landing />
-            </Route>
-            <Route path="/movies">
-              <Landing />
-            </Route>
-            <Route exact path="/tv">
-              <Tv />
-            </Route>
-            <Route path="/movie/:id">
-              <Detail />
-            </Route>
-            <Route path="/shows">
-              <Shows />
-            </Route>
-          </Switch>
-        </>
-      </Router>
+              <Route exact path="/">
+                <Landing />
+              </Route>
+              <Route path="/movies">
+                <Landing />
+              </Route>
+              <Route exact path="/tv">
+                <Tv />
+              </Route>
+              <Route path="/movie/:id">
+                <Detail />
+              </Route>
+              <Route path="/tv/:id">
+                <TvDetail />
+              </Route>
+              <Route path="/search">
+                <Search />
+              </Route>
+            </Switch>
+          </>
+        </Router>
+      </TvState>
     </MoviesState>
   );
 }

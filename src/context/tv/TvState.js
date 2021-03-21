@@ -1,21 +1,21 @@
 import React, { useReducer } from 'react';
 import axios from 'axios';
-import MoviesContext from './moviesContext';
-import MoviesReducer from './moviesReducer';
+import TvContext from './tvContext';
+import TvReducer from './tvReducer';
 import {
-    CLEAR_ERRORS,
-    PLAYING_LOADING,
-    PLAYING_ERROR,
-    GET_PLAYING,
+    CLEAR_TV_ERRORS,
+    ON_AIR_LOADING,
+    ON_AIR_ERROR,
+    GET_ON_AIR,
     TOP_RATED_LOADING,
     TOP_RATED_ERROR,
     GET_TOP_RATED,
     POPULAR_LOADING,
     POPULAR_ERROR,
     GET_POPULAR,
-    GET_MOVIE,
-    MOVIE_LOADING,
-    MOVIE_ERROR,
+    GET_TV,
+    TV_LOADING,
+    TV_ERROR,
     GET_CAST,
     CAST_ERROR,
     CAST_LOADING,
@@ -25,62 +25,56 @@ import {
     GET_VIDEOS,
     VIDEOS_ERROR,
     VIDEOS_LOADING,
-    GET_RESULTS,
-    RESULTS_ERROR,
-    RESULTS_LOADING
 } from '../types';
 
 
-const MoviesState = ({ children }) => {
+const TvState = ({ children }) => {
     const initialState = {
-        playing: [],
         top_rated: [],
-        popular: [],
-        movie: [],
-        cast: [],
         reviews: [],
+        popular: [],
         videos: [],
-        results: [],
+        onAir: [],
+        cast: [],
+        tv: [],
         error: null,
-        playing_loading: false,
-        movie_loading: false,
+        onAir_loading: false,
         top_rated_loading: false,
         popular_loading: false,
+        tv_loading: false,
         cast_loading: false,
         reviews_loading: false,
         videos_loading: false,
-        results_loading: false,
 
     }
-    const [state, dispatch] = useReducer(MoviesReducer, initialState);
+    const [state, dispatch] = useReducer(TvReducer, initialState);
 
 
     // Get Playing Movies
-    const getPlaying = async () => {
+    const getOnAir = async () => {
 
-        setPlayingLoading();
+        setOnAirLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/now_playing?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/tv/on_the_air?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
             dispatch({
-                type: GET_PLAYING,
+                type: GET_ON_AIR,
                 payload: res.data.results
             })
         } catch (err) {
             dispatch({
-                type: PLAYING_ERROR,
+                type: ON_AIR_ERROR,
                 payload: err.response.data
             })
             setTimeout(() => clearErrors(), 5000);
         }
     }
 
-
-    // Get Top Rated Movies
+    // Get Top Rated Tv
     const getTopRated = async () => {
 
         setTopRatedLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/tv/top_rated?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
             dispatch({
                 type: GET_TOP_RATED,
                 payload: res.data.results
@@ -94,12 +88,12 @@ const MoviesState = ({ children }) => {
         }
     }
 
-    // Get Top Rated Movies
+    // Get Top Rated Tv
     const getPopular = async () => {
 
         setPopularLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
             dispatch({
                 type: GET_POPULAR,
                 payload: res.data.results
@@ -112,19 +106,20 @@ const MoviesState = ({ children }) => {
             setTimeout(() => clearErrors(), 5000);
         }
     }
-    // Get  Movie (id)
-    const getMovie = async (id) => {
 
-        setMovieLoading();
+    // Get  Movie (id)
+    const getTv = async (id) => {
+
+        setTvLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/tv/${id}?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
             dispatch({
-                type: GET_MOVIE,
+                type: GET_TV,
                 payload: res.data
             })
         } catch (err) {
             dispatch({
-                type: MOVIE_ERROR,
+                type: TV_ERROR,
                 payload: err.response.data
             })
             setTimeout(() => clearErrors(), 5000);
@@ -136,7 +131,7 @@ const MoviesState = ({ children }) => {
 
         setCastLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/tv/${id}/credits?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
             dispatch({
                 type: GET_CAST,
                 payload: res.data.cast
@@ -155,7 +150,7 @@ const MoviesState = ({ children }) => {
 
         setReviewsLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}/reviews?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/tv/${id}/reviews?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
             dispatch({
                 type: GET_REVIEWS,
                 payload: res.data.results
@@ -173,7 +168,7 @@ const MoviesState = ({ children }) => {
 
         setVideosLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/tv/${id}/videos?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
             dispatch({
                 type: GET_VIDEOS,
                 payload: res.data.results
@@ -186,75 +181,58 @@ const MoviesState = ({ children }) => {
             setTimeout(() => clearErrors(), 5000);
         }
     }
-    // Get  Search Results (id)
-    const getResults = async (q) => {
 
-        setResultsLoading();
-        try {
-            const res = await axios.get(`https://api.themoviedb.org/3/search/multi?query=${q}&api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
-            dispatch({
-                type: GET_RESULTS,
-                payload: res.data.results
-            })
-        } catch (err) {
-            dispatch({
-                type: RESULTS_ERROR,
-                payload: err.response.data
-            })
-            setTimeout(() => clearErrors(), 5000);
-        }
-    }
+
+
+
+
+
+
 
 
     // Clear Errors
     const clearErrors = () => dispatch({
-        type: CLEAR_ERRORS
+        type: CLEAR_TV_ERRORS
     })
 
     // Set Loading
-    const setPlayingLoading = () => dispatch({ type: PLAYING_LOADING })
+    const setOnAirLoading = () => dispatch({ type: ON_AIR_LOADING })
     const setTopRatedLoading = () => dispatch({ type: TOP_RATED_LOADING })
     const setPopularLoading = () => dispatch({ type: POPULAR_LOADING })
-    const setMovieLoading = () => dispatch({ type: MOVIE_LOADING })
+    const setTvLoading = () => dispatch({ type: TV_LOADING })
     const setCastLoading = () => dispatch({ type: CAST_LOADING })
     const setReviewsLoading = () => dispatch({ type: REVIEWS_LOADING })
     const setVideosLoading = () => dispatch({ type: VIDEOS_LOADING })
-    const setResultsLoading = () => dispatch({ type: RESULTS_LOADING })
 
 
-    return <MoviesContext.Provider
+    return <TvContext.Provider
         value={{
-
-            playing: state.playing,
-            movie: state.movie,
-            cast: state.cast,
-            videos: state.videos,
+            onAir: state.onAir,
+            onAir_loading: state.onAir_loading,
             top_rated: state.top_rated,
-            popular: state.popular,
-            reviews: state.reviews,
-            results: state.results,
-            plying_loading: state.plying_loading,
-            cast_loading: state.cast_loading,
-            movie_loading: state.movie_loading,
             top_rated_loading: state.top_rated_loading,
+            popular: state.popular,
             popular_loading: state.popular_loading,
+            tv: state.tv,
+            tv_loading: state.tv_loading,
+            cast: state.cast,
+            cast_loading: state.cast_loading,
+            videos: state.videos,
+            reviews: state.reviews,
             reviews_loading: state.reviews_loading,
             videos_loading: state.videos_loading,
-            results_loading: state.results_loading,
-            getPlaying,
-            getTopRated,
-            getPopular,
-            getMovie,
-            getCast,
             getReviews,
             getVideos,
-            getResults
-
+            getCast,
+            getTv,
+            getPopular,
+            getTopRated,
+            getOnAir,
         }}
     >
         {children}
-    </MoviesContext.Provider>
+    </TvContext.Provider>
 }
 
-export default MoviesState;
+export default TvState;
 
