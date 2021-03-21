@@ -26,7 +26,7 @@ const Nav = () => {
                             <NavLink to="/tv" activeClassName='active' className="nav-link" >TV</NavLink >
                         </li>
                     </ul>
-                    <form className="d-flex" onSubmit={handleSubmit}>
+                    <form className="" onSubmit={handleSubmit}>
                         <div className="search-wrapper d-flex align-items-center">
                             <input className="search me-2" type="search" placeholder="Search" aria-label="Search" value={q} onChange={(e) => setq(e.target.value)} />
                             <button className="my-btn d-flex align-items-center" type="submit"><ion-icon className="my-icon" style={{ fontSize: 25, color: '#7A7A7A' }} name="search-outline"></ion-icon></button>

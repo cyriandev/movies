@@ -254,6 +254,7 @@ ul {
 }
 
 .search{
+  width: 100%;
   border: none;
   background-color: rgb(54, 56, 58);
   font-size: 13px;
@@ -266,6 +267,11 @@ border: none;
 }
 
 .navbar-dark, .navbar-toggler:active, .navbar-dark .navbar-toggler:focus{
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.navbar-dark, .navbar-toggler, .navbar-dark .navbar-toggler{
   border: none;
   outline: none;
   box-shadow: none;

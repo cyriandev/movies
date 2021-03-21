@@ -149,7 +149,6 @@ const TvDetail = () => {
 
 
                             }
-                            <h1>dfskfdklsf</h1>
 
                         </div>
                     </div>

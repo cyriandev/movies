@@ -5,6 +5,7 @@ import MoviesContext from '../context/movies/moviesContext';
 import Cast from './Cast';
 import Review from "./Review";
 import Video from "./Video";
+import { Helmet } from 'react-helmet'
 
 export const Detail = () => {
   let { id } = useParams();
@@ -39,6 +40,10 @@ export const Detail = () => {
 
   return (
     <div className="container">
+      <Helmet>
+        <meta name="title" content={`${movie.title}`} />
+        <meta name="description" content={`${movie.overview}`} />
+      </Helmet>
       <div className="hero" style={{ backgroundImage: `url('https://image.tmdb.org/t/p/original/${movie.backdrop_path}')` }}>
         <div className="layer">
           <div className="row">

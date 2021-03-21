@@ -35,7 +35,7 @@ const Tv = () => {
 
                     {onAir_loading ? <div className="carousel-item active d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
 
-                        onAir.map((item, index) =>
+                        onAir.slice(0, 5).map((item, index) =>
                         (
                             <div key={index} className={`carousel-item ${index === 0 && "active"}`}>
                                 <div className="slide-item" style={{
@@ -108,7 +108,7 @@ const Tv = () => {
                     </div>
                 </div>
                 <div className="tab-pane  show active  mt-5" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <p className="label">Movies</p>
+                    {/* <p className="label">Movies</p> */}
                     <div className="row g-0">
 
                         {

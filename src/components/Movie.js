@@ -6,6 +6,7 @@ export const Movie = ({ movie }) => {
 
   return (
     <div className="col-sm-4 col-md-3">
+
       <Link to={`/movie/${movie.id}`}>
 
         <div className="movie">
