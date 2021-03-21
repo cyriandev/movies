@@ -82,6 +82,7 @@ export const Detail = () => {
 
               {
                 cast_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
+                  cast &&
                   cast.map((item, index) => {
                     if (index < 6)
                       return (
@@ -98,6 +99,7 @@ export const Detail = () => {
 
               {
                 reviews_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
+                  reviews &&
                   reviews.map((item, index) => (
                     <Review key={index} item={item} />
                   ))
@@ -108,11 +110,12 @@ export const Detail = () => {
           <div className="tab-pane  mt-5" id="contact" role="tabpanel" aria-labelledby="contact-tab">
             <div className="row g-0">
               {
-                videos_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> : (
+                videos_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
+                  videos &&
                   videos.map((item, index) => (
                     <Video key={index} video={item} />
                   ))
-                )
+
               }
 
 

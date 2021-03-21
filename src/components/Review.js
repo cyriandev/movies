@@ -3,11 +3,12 @@ import Truncate from 'react-truncate';
 
 import moment from "moment";
 const Review = ({ item }) => {
+
     return (
         <div>
             <div className="review">
                 <div className="d-flex align-items-center">
-                    <img src={item.author_details.avatar_path.includes("http") ? `${item.author_details.avatar_path.substring(1)}` : `https://image.tmdb.org/t/p/original/${item.author_details.avatar_path}`} alt="Avatar" className="avatar"></img>
+                    <img src={item.author_details.avatar_path && item.author_details.avatar_path.includes("http") ? `${item.author_details.avatar_path.substring(1)}` : `https://image.tmdb.org/t/p/original/${item.author_details.avatar_path}`} alt="Avatar" className="avatar"></img>
                     <h1 className="author">{item.author}</h1>
                 </div>
                 <p className="mt-2 review-date">{moment(item.created_at).format("DD MMMM YYYY")}</p>

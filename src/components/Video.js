@@ -26,7 +26,7 @@ const Video = ({ video }) => {
                             <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <iframe title={video.name} width="100%" height="360" allowFullscreen="" src={`https://www.youtube.com/embed/${video.key}`}></iframe>
+                            <iframe title={video.name} width="100%" height="360" allowFullScreen="" src={`https://www.youtube.com/embed/${video.key}`}></iframe>
                         </div>
 
                     </div>

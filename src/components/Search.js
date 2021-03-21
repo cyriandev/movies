@@ -33,7 +33,7 @@ const Search = () => {
             <div className="container mt-5">
                 <h1 className="heading">Results ({results.length})</h1>
 
-                <div className="row g-0">
+                <div className="row g-0 mt-4">
 
                     {
                         !results ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}>Opps. Nothing was found with {q}</div> :

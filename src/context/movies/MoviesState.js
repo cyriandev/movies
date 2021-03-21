@@ -68,7 +68,7 @@ const MoviesState = ({ children }) => {
         } catch (err) {
             dispatch({
                 type: PLAYING_ERROR,
-                payload: err.response.data
+                payload: (err.response || {}).data
             })
             setTimeout(() => clearErrors(), 5000);
         }
@@ -88,7 +88,7 @@ const MoviesState = ({ children }) => {
         } catch (err) {
             dispatch({
                 type: TOP_RATED_ERROR,
-                payload: err.response.data
+                payload: (err.response || {}).data
             })
             setTimeout(() => clearErrors(), 5000);
         }
@@ -107,7 +107,7 @@ const MoviesState = ({ children }) => {
         } catch (err) {
             dispatch({
                 type: POPULAR_ERROR,
-                payload: err.response.data
+                payload: (err.response || {}).data
             })
             setTimeout(() => clearErrors(), 5000);
         }
@@ -125,7 +125,7 @@ const MoviesState = ({ children }) => {
         } catch (err) {
             dispatch({
                 type: MOVIE_ERROR,
-                payload: err.response.data
+                payload: (err.response || {}).data
             })
             setTimeout(() => clearErrors(), 5000);
         }
@@ -144,7 +144,7 @@ const MoviesState = ({ children }) => {
         } catch (err) {
             dispatch({
                 type: CAST_ERROR,
-                payload: err.response.data
+                payload: (err.response || {}).data
             })
             setTimeout(() => clearErrors(), 5000);
         }
@@ -163,7 +163,7 @@ const MoviesState = ({ children }) => {
         } catch (err) {
             dispatch({
                 type: REVIEWS_ERROR,
-                payload: err.response.data
+                payload: (err.response || {}).data
             })
             setTimeout(() => clearErrors(), 5000);
         }
@@ -181,7 +181,7 @@ const MoviesState = ({ children }) => {
         } catch (err) {
             dispatch({
                 type: VIDEOS_ERROR,
-                payload: err.response.data
+                payload: (err.response || {}).data
             })
             setTimeout(() => clearErrors(), 5000);
         }
@@ -199,7 +199,7 @@ const MoviesState = ({ children }) => {
         } catch (err) {
             dispatch({
                 type: RESULTS_ERROR,
-                payload: err.response.data
+                payload: (err.response || {}).data
             })
             setTimeout(() => clearErrors(), 5000);
         }

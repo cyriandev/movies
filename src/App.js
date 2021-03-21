@@ -11,6 +11,7 @@ import MoviesState from './context/movies/MoviesState';
 import TvState from './context/tv/TvState';
 
 import "./App.css";
+import Footer from "./components/Footer";
 
 function App() {
 
@@ -65,6 +66,8 @@ function App() {
                 <Search />
               </Route>
             </Switch>
+
+            <Footer />
           </>
         </Router>
       </TvState>
