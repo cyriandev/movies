@@ -35,7 +35,7 @@ const Landing = () => {
         <div className="container">
 
             <Helmet>
-                <meta name="title" content="Enfo (Entertainment info)" />
+                <meta name="title" content="Movies" />
                 <meta name="description" content="Get Movies and tv show information from TMDB's API" />
             </Helmet>
 

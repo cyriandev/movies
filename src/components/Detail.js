@@ -5,7 +5,7 @@ import MoviesContext from '../context/movies/moviesContext';
 import Cast from './Cast';
 import Review from "./Review";
 import Video from "./Video";
-import { Helmet } from 'react-helmet'
+import { Helmet } from "react-helmet";
 
 export const Detail = () => {
   let { id } = useParams();

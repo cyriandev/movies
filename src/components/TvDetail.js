@@ -5,6 +5,7 @@ import moment from "moment";
 import Cast from './Cast';
 import Video from './Video';
 import Review from './Review';
+import { Helmet } from 'react-helmet';
 
 const TvDetail = () => {
 
@@ -41,6 +42,10 @@ const TvDetail = () => {
     let { seasons } = tv;
     return (
         <div className="container">
+            <Helmet>
+                <meta name="title" content={`${tv.name}`} />
+                <meta name="description" content={`${tv.overview}`} />
+            </Helmet>
             <div className="hero" style={{ backgroundImage: `url('https://image.tmdb.org/t/p/original/${tv.backdrop_path}')` }}>
                 <div className="layer">
                     <div className="row">

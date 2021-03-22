@@ -3,6 +3,7 @@ import TvContext from '../context/tv/tvContext';
 import { Link } from "react-router-dom";
 import moment from "moment";
 import TvItem from './TvItem';
+import { Helmet } from 'react-helmet';
 
 const Tv = () => {
     const tvContext = useContext(TvContext);
@@ -29,6 +30,9 @@ const Tv = () => {
 
     return (
         <div className="container">
+            <Helmet>
+                <meta name="title" content="TV" />
+            </Helmet>
             <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
                 <div className="carousel-inner">
 
