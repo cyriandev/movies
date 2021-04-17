@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react'
+import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom'
 import MoviesContext from '../context/movies/moviesContext';
 import Result from './Result';
@@ -30,6 +31,10 @@ const Search = () => {
 
     return (
         <div className="searchM">
+            <Helmet>
+                <title>{q}</title>
+                {/* <meta name="description" content={`${movie.overview}`} /> */}
+            </Helmet>
             <div className="container mt-5">
                 <h1 className="heading">Results ({results.length})</h1>
 

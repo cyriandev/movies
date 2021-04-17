@@ -8,7 +8,13 @@ const Review = ({ item }) => {
         <div>
             <div className="review">
                 <div className="d-flex align-items-center">
-                    <img src={item.author_details.avatar_path && item.author_details.avatar_path.includes("http") ? `${item.author_details.avatar_path.substring(1)}` : `https://image.tmdb.org/t/p/original/${item.author_details.avatar_path}`} alt="Avatar" className="avatar"></img>
+                    <div>
+                        {item.author_details.avatar_path ?
+                            <img src={item.author_details.avatar_path.includes("http") ? `${item.author_details.avatar_path.substring(1)}` : `https://image.tmdb.org/t/p/original/${item.author_details.avatar_path}`} alt="Avatar" className="avatar"></img>
+                            :
+                            <img src="http://via.placeholder.com/200x200" alt="Avatar" className="avatar"></img>
+                        }
+                    </div>
                     <h1 className="author">{item.author}</h1>
                 </div>
                 <p className="mt-2 review-date">{moment(item.created_at).format("DD MMMM YYYY")}</p>

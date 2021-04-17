@@ -30,8 +30,10 @@ const Tv = () => {
 
     return (
         <div className="container">
+
             <Helmet>
-                <meta name="title" content="TV" />
+                <title>Movies and tv shows</title>
+                <meta name="description" content="Get Movies and tv show information from TMDB's API" />
             </Helmet>
             <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
                 <div className="carousel-inner">
@@ -82,7 +84,7 @@ const Tv = () => {
             </div>
 
 
-            <ul className="nav nav-tabs mt-4" id="myTab" role="tablist">
+            <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item" role="presentation">
                     <button style={{ paddingLeft: 0 }} className="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">MOST POPULAR</button>
                 </li>

@@ -32,6 +32,8 @@ const TvDetail = () => {
         getCast(id);
         getReviews(id);
         getVideos(id);
+
+        window.scrollTo(0, 0);
         // eslint-disable-next-line
     }, [id]);
 
@@ -43,7 +45,7 @@ const TvDetail = () => {
     return (
         <div className="container">
             <Helmet>
-                <meta name="title" content={`${tv.name}`} />
+                <title>{tv.name}</title>
                 <meta name="description" content={`${tv.overview}`} />
             </Helmet>
             <div className="hero" style={{ backgroundImage: `url('https://image.tmdb.org/t/p/original/${tv.backdrop_path}')` }}>

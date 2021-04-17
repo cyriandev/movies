@@ -31,6 +31,8 @@ export const Detail = () => {
     getCast(id);
     getReviews(id);
     getVideos(id);
+
+    window.scrollTo(0, 0);
     // eslint-disable-next-line
   }, [id]);
 
@@ -41,7 +43,7 @@ export const Detail = () => {
   return (
     <div className="container">
       <Helmet>
-        <meta name="title" content={`${movie.title}`} />
+        <title>{movie.title}</title>
         <meta name="description" content={`${movie.overview}`} />
       </Helmet>
       <div className="hero" style={{ backgroundImage: `url('https://image.tmdb.org/t/p/original/${movie.backdrop_path}')` }}>
