@@ -35,7 +35,7 @@ const Landing = () => {
         <div className="container">
 
             <Helmet>
-                <meta name="title" content="Movies" />
+                <title>Enfo - Entertainment info</title>
                 <meta name="description" content="Get Movies and tv show information from TMDB's API" />
             </Helmet>
 
@@ -55,10 +55,6 @@ const Landing = () => {
 
                 </div>
             </div>
-            <div className="controls">
-                <a href="#" style={{ marginRight: 18 }} type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev"><ion-icon name="chevron-back-outline"></ion-icon></a>
-                <a href="#" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next"><ion-icon name="chevron-forward-outline"></ion-icon></a>
-            </div>
 
 
 
@@ -70,9 +66,6 @@ const Landing = () => {
                 <li className="nav-item" role="presentation">
                     <button className="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">TOP RATED</button>
                 </li>
-                {/* <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">TV</button>
-                </li> */}
             </ul>
             <div className="tab-content" id="myTabContent">
                 <div className="tab-pane mt-5" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -99,48 +92,7 @@ const Landing = () => {
 
                     </div>
                 </div>
-                <div className="tab-pane  mt-5" id="contact" role="tabpanel" aria-labelledby="contact-tab"> <p className="label">Movies</p>
-                    <div className="row g-0">
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-                        </div>
-
-                    </div></div>
             </div>
-
-
-
-
-
-
-
         </div>
     )
 }

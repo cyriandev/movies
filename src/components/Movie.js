@@ -11,12 +11,24 @@ export const Movie = ({ movie }) => {
 
         <div className="movie">
           <div className="poster">
-            <img
-              src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
-              alt={movie.title}
-              width="100%"
-              loading="lazy"
-            />
+            {movie.poster_path ?
+
+              <img
+                src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                alt={movie.title}
+                width="100%"
+                loading="lazy"
+              />
+              :
+
+              <div className="no_img">
+
+                <img src={`http://via.placeholder.com/318x476`} alt="no-image" loading="lazy" width="100%" />
+                <div className="image_icon d-flex align-items-center justify-content-center">
+                  <ion-icon name="image-outline"></ion-icon>
+                </div>
+              </div>
+            }
           </div>
           <div className="details">
             <h4><span className="badge bg-light text-dark">{movie.original_language}</span> {movie.title}</h4>

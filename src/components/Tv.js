@@ -65,6 +65,11 @@ const Tv = () => {
                                                 {item.overview}
                                             </p>
                                             <Link to={`/tv/${item.id}`} className="cta mt-2">Learn More</Link>
+
+                                            <div className="controls mt-3 ">
+                                                <a href="#" className="mr-5" style={{ marginRight: 18 }} type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev"><ion-icon name="chevron-back-outline"></ion-icon></a>
+                                                <a href="#" className="" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next"><ion-icon name="chevron-forward-outline"></ion-icon></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -75,14 +80,6 @@ const Tv = () => {
                         )}
                 </div>
             </div>
-
-            <div className="controls">
-                <a href="#" style={{ marginRight: 18 }} type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev"><ion-icon name="chevron-back-outline"></ion-icon></a>
-                <a href="#" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next"><ion-icon name="chevron-forward-outline"></ion-icon></a>
-            </div>
-
-
-
 
 
             <ul className="nav nav-tabs mt-4" id="myTab" role="tablist">
