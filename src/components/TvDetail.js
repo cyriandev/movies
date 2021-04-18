@@ -6,6 +6,7 @@ import Cast from './Cast';
 import Video from './Video';
 import Review from './Review';
 import { Helmet } from 'react-helmet';
+import Crew from './Crew';
 
 const TvDetail = () => {
 
@@ -18,7 +19,7 @@ const TvDetail = () => {
         tv,
         getCast,
         cast_loading,
-        cast,
+        credits,
         getReviews,
         reviews_loading,
         reviews,
@@ -80,6 +81,10 @@ const TvDetail = () => {
                     <li className="nav-item" role="presentation">
                         <button style={{ paddingLeft: 0, }} className="nav-link active md" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Cast</button>
                     </li>
+
+                    <li className="nav-item" role="presentation">
+                        <button className="nav-link md" id="crew-tab" data-bs-toggle="tab" data-bs-target="#crew" type="button" role="tab" aria-controls="crew" aria-selected="true">Crew</button>
+                    </li>
                     <li className="nav-item" role="presentation">
                         <button className="nav-link md" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Reviews ({reviews_loading ? '0' : reviews.length})</button>
                     </li>
@@ -96,10 +101,29 @@ const TvDetail = () => {
 
                             {
                                 cast_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
-                                    cast.map((item, index) => {
+
+                                    credits.cast &&
+                                    credits.cast.map((item, index) => {
                                         if (index < 6)
                                             return (
                                                 <Cast key={index} cast={item} />
+                                            )
+                                    })
+                            }
+
+
+                        </div>
+                    </div>
+                    <div className="tab-pane mt-2" id="crew" role="tabpanel" aria-labelledby="crew-tab">
+                        <div className="row g-0">
+
+                            {
+                                cast_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
+                                    credits.crew &&
+                                    credits.crew.map((item, index) => {
+                                        if (index < 6)
+                                            return (
+                                                <Crew key={index} crew={item} />
                                             )
                                     })
                             }

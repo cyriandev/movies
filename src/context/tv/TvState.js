@@ -16,7 +16,7 @@ import {
     GET_TV,
     TV_LOADING,
     TV_ERROR,
-    GET_CAST,
+    GET_CREDITS,
     CAST_ERROR,
     CAST_LOADING,
     GET_REVIEWS,
@@ -35,7 +35,7 @@ const TvState = ({ children }) => {
         popular: [],
         videos: [],
         onAir: [],
-        cast: [],
+        credits: [],
         tv: [],
         error: null,
         onAir_loading: false,
@@ -133,8 +133,8 @@ const TvState = ({ children }) => {
         try {
             const res = await axios.get(`https://api.themoviedb.org/3/tv/${id}/credits?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
             dispatch({
-                type: GET_CAST,
-                payload: res.data.cast
+                type: GET_CREDITS,
+                payload: res.data
             })
         } catch (err) {
             dispatch({
@@ -215,7 +215,7 @@ const TvState = ({ children }) => {
             popular_loading: state.popular_loading,
             tv: state.tv,
             tv_loading: state.tv_loading,
-            cast: state.cast,
+            credits: state.credits,
             cast_loading: state.cast_loading,
             videos: state.videos,
             reviews: state.reviews,

@@ -16,7 +16,7 @@ import {
     GET_MOVIE,
     MOVIE_LOADING,
     MOVIE_ERROR,
-    GET_CAST,
+    GET_CREDITS,
     CAST_ERROR,
     CAST_LOADING,
     GET_REVIEWS,
@@ -37,7 +37,7 @@ const MoviesState = ({ children }) => {
         top_rated: [],
         popular: [],
         movie: [],
-        cast: [],
+        credits: [],
         reviews: [],
         videos: [],
         results: [],
@@ -60,7 +60,7 @@ const MoviesState = ({ children }) => {
 
         setPlayingLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/now_playing?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
             dispatch({
                 type: GET_PLAYING,
                 payload: res.data.results
@@ -80,7 +80,7 @@ const MoviesState = ({ children }) => {
 
         setTopRatedLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
             dispatch({
                 type: GET_TOP_RATED,
                 payload: res.data.results
@@ -99,7 +99,7 @@ const MoviesState = ({ children }) => {
 
         setPopularLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
             dispatch({
                 type: GET_POPULAR,
                 payload: res.data.results
@@ -117,7 +117,7 @@ const MoviesState = ({ children }) => {
 
         setMovieLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
             dispatch({
                 type: GET_MOVIE,
                 payload: res.data
@@ -136,10 +136,10 @@ const MoviesState = ({ children }) => {
 
         setCastLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
             dispatch({
-                type: GET_CAST,
-                payload: res.data.cast
+                type: GET_CREDITS,
+                payload: res.data
             })
         } catch (err) {
             dispatch({
@@ -155,7 +155,7 @@ const MoviesState = ({ children }) => {
 
         setReviewsLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}/reviews?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
             dispatch({
                 type: GET_REVIEWS,
                 payload: res.data.results
@@ -173,7 +173,7 @@ const MoviesState = ({ children }) => {
 
         setVideosLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
             dispatch({
                 type: GET_VIDEOS,
                 payload: res.data.results
@@ -191,7 +191,7 @@ const MoviesState = ({ children }) => {
 
         setResultsLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/search/multi?query=${q}&api_key=1594420be7b6feaa53bb4b0ec89cbc07`);
+            const res = await axios.get(`https://api.themoviedb.org/3/search/multi?query=${q}&api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
             dispatch({
                 type: GET_RESULTS,
                 payload: res.data.results
@@ -227,7 +227,7 @@ const MoviesState = ({ children }) => {
 
             playing: state.playing,
             movie: state.movie,
-            cast: state.cast,
+            credits: state.credits,
             videos: state.videos,
             top_rated: state.top_rated,
             popular: state.popular,

@@ -12,7 +12,7 @@ import {
     GET_TV,
     TV_LOADING,
     TV_ERROR,
-    GET_CAST,
+    GET_CREDITS,
     CAST_ERROR,
     CAST_LOADING,
     GET_REVIEWS,
@@ -102,10 +102,10 @@ export default (state, action) => {
                 ...state,
                 cast_loading: true
             }
-        case GET_CAST:
+        case GET_CREDITS:
             return {
                 ...state,
-                cast: action.payload,
+                credits: action.payload,
                 cast_loading: false
             }
         case CAST_ERROR:

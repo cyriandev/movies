@@ -9,17 +9,31 @@ const Video = ({ video }) => {
     return (
         <div className="col-md-3 vid">
             <a onClick={() => setPlaying(true)} href='#' data-bs-toggle="modal" data-bs-target={"#staticBackdrop" + video.id}>
+                <div style={{ position: 'relative' }}>
+                    <img src={`http://i3.ytimg.com/vi/${video.key}/hqdefault.jpg`} alt="" width="100%" style={{ borderRadius: 3 }} />
+                    <div
+                        className="d-flex align-items-center justify-content-center"
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%"
+                        }}
+                    >
+                        <ion-icon name="play-circle-outline"></ion-icon>
 
-                <div className="d-flex align-items-center">
+                    </div>
+                </div>
+                {/* <div className="d-flex align-items-center">
                     <div>
 
-                        <ion-icon name="play-circle-outline"></ion-icon>
                     </div>
                     <p>{video.name}</p>
-                </div>
+
+                
+                </div> */}
             </a>
-
-
 
 
             {/* <!-- Modal --> */}
