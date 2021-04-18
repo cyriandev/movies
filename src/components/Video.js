@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
+import Player from 'react-player/youtube'
 
 const Video = ({ video }) => {
+
+    const [playing, setPlaying] = useState(false)
+
+
     return (
         <div className="col-md-3 vid">
-            <a href='#' data-bs-toggle="modal" data-bs-target={"#staticBackdrop" + video.id}>
+            <a onClick={() => setPlaying(true)} href='#' data-bs-toggle="modal" data-bs-target={"#staticBackdrop" + video.id}>
 
                 <div className="d-flex align-items-center">
                     <div>
@@ -23,10 +28,10 @@ const Video = ({ video }) => {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="staticBackdropLabel">{video.name}</h5>
-                            <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button onClick={() => setPlaying(false)} type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <iframe title={video.name} width="100%" height="360" allowFullScreen="" src={`https://www.youtube.com/embed/${video.key}`}></iframe>
+                            <Player url={`https://www.youtube.com/watch?v=${video.key}`} playing={playing} controls width="100%" />
                         </div>
 
                     </div>
