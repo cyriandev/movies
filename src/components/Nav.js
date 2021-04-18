@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink, useHistory } from "react-router-dom";
+import ReactGA from 'react-ga';
+ReactGA.initialize('UA-183879346-3'); // add your tracking id here.
 
 const Nav = () => {
     let history = useHistory();
@@ -10,13 +12,16 @@ const Nav = () => {
         history.push(`/search?q=${q}`);
     }
 
+    useEffect(() => {
+        ReactGA.pageview(window.location.pathname + window.location.search);
+    }, [history.location.key])
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container">
-                <div className="navbar-brand d-flex align-items-center">
+                <NavLink to="/" className="navbar-brand d-flex align-items-center">
                     <ion-icon style={{ fontSize: 30 }} name="videocam"></ion-icon>
-
-                </div >
+                </NavLink >
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
