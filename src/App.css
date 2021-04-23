@@ -172,14 +172,14 @@ ul {
 .layer{
   
     padding: 50px;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.7);
     /* -webkit-backdrop-filter: saturate(180%) blur(5px);
     backdrop-filter: saturate(180%) blur(5px); */
 }
 
 .slider{
   padding: 215px 50px;
-     background: rgba(0,0,0,0.8);
+     background: rgba(0,0,0,0.5);
     /* -webkit-backdrop-filter: saturate(180%) blur(1px);
     backdrop-filter: saturate(180%) blur(1px); */
 }

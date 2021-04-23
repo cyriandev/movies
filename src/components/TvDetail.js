@@ -161,7 +161,7 @@ const TvDetail = () => {
                             {seasons &&
 
                                 seasons.map((item, index) => (
-                                    <div className="d-flex review seasons">
+                                    <div key={index} className="d-flex review seasons">
                                         <div className="">
 
                                             <img src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}

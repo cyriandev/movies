@@ -5,7 +5,7 @@ import moment from "moment";
 const TvItem = ({ tv }) => {
     return (
         <div className="col-sm-4 col-md-3">
-            <Link to={`/tv/${tv.id}`}>
+            <Link to={`/tv/${tv.id}/${tv.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`}>
 
                 <div className="tv">
                     <div className="poster">

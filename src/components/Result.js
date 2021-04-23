@@ -5,7 +5,7 @@ import moment from "moment";
 const Result = ({ item }) => {
     return (
         <div className="col-sm-4 col-md-3">
-            <Link to={item.media_type === "movie" ? `/movie/${item.id}` : `/tv/${item.id}`}>
+            <Link to={item.media_type === "movie" ? `/movie/${item.id}/${item.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}` : `/tv/${item.id}/${item.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`}>
 
                 <div className="movie">
                     <div className="poster">

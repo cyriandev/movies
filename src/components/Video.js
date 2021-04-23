@@ -10,7 +10,7 @@ const Video = ({ video }) => {
         <div className="col-md-3 vid">
             <a onClick={() => setPlaying(true)} href='#' data-bs-toggle="modal" data-bs-target={"#staticBackdrop" + video.id}>
                 <div style={{ position: 'relative' }}>
-                    <img src={`http://i3.ytimg.com/vi/${video.key}/hqdefault.jpg`} alt="" width="100%" style={{ borderRadius: 3 }} />
+                    <img src={`http://i3.ytimg.com/vi/${video.key}/maxresdefault.jpg`} alt="" width="100%" style={{ borderRadius: 3 }} />
                     <div
                         className="d-flex align-items-center justify-content-center"
                         style={{

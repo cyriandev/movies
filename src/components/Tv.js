@@ -66,7 +66,7 @@ const Tv = () => {
                                             <p>
                                                 {item.overview}
                                             </p>
-                                            <Link to={`/tv/${item.id}`} className="cta mt-2">Learn More</Link>
+                                            <Link to={`/tv/${item.id}/${item.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`} className="cta mt-2">Learn More</Link>
 
                                             <div className="controls mt-3 ">
                                                 <a href="#" className="mr-5" style={{ marginRight: 18 }} type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev"><ion-icon name="chevron-back-outline"></ion-icon></a>

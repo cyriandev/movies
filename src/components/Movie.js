@@ -7,7 +7,7 @@ export const Movie = ({ movie }) => {
   return (
     <div className="col-sm-4 col-md-3">
 
-      <Link to={`/movie/${movie.id}`}>
+      <Link to={`/movie/${movie.id}/${movie.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`}>
 
         <div className="movie">
           <div className="poster">

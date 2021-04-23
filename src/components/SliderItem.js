@@ -30,7 +30,7 @@ const SliderItem = ({ item, index }) => {
                         </p>
                         <div>
 
-                            <Link to={`/movie/${item.id}`} className="cta mt-2"> <span style={{ marginRight: 3 }}>Learn More</span></Link>
+                            <Link to={`/movie/${item.id}/${item.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`} className="cta mt-2"> <span style={{ marginRight: 3 }}>Learn More</span></Link>
                         </div>
 
                         <div className="controls mt-3 ">

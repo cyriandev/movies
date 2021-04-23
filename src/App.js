@@ -56,10 +56,10 @@ function App() {
               <Route exact path="/tv">
                 <Tv />
               </Route>
-              <Route path="/movie/:id">
+              <Route path="/movie/:id/:title">
                 <Detail />
               </Route>
-              <Route path="/tv/:id">
+              <Route path="/tv/:id/:title">
                 <TvDetail />
               </Route>
               <Route path="/search">
