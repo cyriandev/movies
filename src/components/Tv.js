@@ -47,14 +47,16 @@ const Tv = () => {
                                 <div className="slide-item" style={{
                                     backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 100%), url('https://image.tmdb.org/t/p/original/${item.backdrop_path}')`
                                 }}>
-                                    <div className="slider">
-                                        <div className="info">
-                                            <span className="badge bg-light text-dark">On Air</span>
-                                            <h1>
-                                                {item.name}
-                                            </h1>
-                                            <h5>
-                                                {moment(item.first_air_date).format("DD MMMM YYYY")}
+                                    <Link to={`/tv/${item.id}/${item.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`} className="cta mt-2">
+
+                                        <div className="slider">
+                                            <div className="info">
+                                                <span className="badge bg-light text-dark">On Air</span>
+                                                <h1>
+                                                    {item.name}
+                                                </h1>
+                                                <h5>
+                                                    {moment(item.first_air_date).format("DD MMMM YYYY")}
                                                 &nbsp;
                                                 &nbsp;
                                                 <span>&bull;</span>
@@ -63,17 +65,17 @@ const Tv = () => {
 
                                                 {item.vote_average}/10
                                             </h5>
-                                            <p>
-                                                {item.overview}
-                                            </p>
-                                            <Link to={`/tv/${item.id}/${item.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`} className="cta mt-2">Learn More</Link>
+                                                <p>
+                                                    {item.overview}
+                                                </p>
 
-                                            <div className="controls mt-3 ">
-                                                <a href="#" className="mr-5" style={{ marginRight: 18 }} type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev"><ion-icon name="chevron-back-outline"></ion-icon></a>
-                                                <a href="#" className="" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next"><ion-icon name="chevron-forward-outline"></ion-icon></a>
+                                                {/* <div className="controls mt-3 ">
+                                                    <a href="#" className="mr-5" style={{ marginRight: 18 }} type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev"><ion-icon name="chevron-back-outline"></ion-icon></a>
+                                                    <a href="#" className="" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next"><ion-icon name="chevron-forward-outline"></ion-icon></a>
+                                                </div> */}
                                             </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 </div>
                             </div>
 
