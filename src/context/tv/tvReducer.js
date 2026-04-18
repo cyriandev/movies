@@ -29,7 +29,7 @@ import {
 } from '../types';
 
 
-export default (state, action) => {
+const tvReducer = (state, action) => {
     switch (action.type) {
         case ON_AIR_LOADING:
             return {
@@ -141,6 +141,12 @@ export default (state, action) => {
                 reviews: action.payload,
                 reviews_loading: false
             }
+        case REVIEWS_ERROR:
+            return {
+                ...state,
+                error: action.payload,
+                reviews_loading: false
+            }
         case VIDEOS_ERROR:
             return {
                 ...state,
@@ -186,4 +192,6 @@ export default (state, action) => {
         default:
             return state;
     }
-}
+};
+
+export default tvReducer;

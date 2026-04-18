@@ -22,13 +22,14 @@ import {
     VIDEOS_ERROR,
     VIDEOS_LOADING,
     RESULTS_LOADING,
+    RESULTS_ERROR,
     GET_RESULTS,
     GET_GENRES,
     GENRES_LOADING,
 } from '../types';
 
 
-export default (state, action) => {
+const moviesReducer = (state, action) => {
     switch (action.type) {
         case PLAYING_LOADING:
             return {
@@ -145,7 +146,7 @@ export default (state, action) => {
                 error: action.payload,
                 cast_loading: false
             }
-        case REVIEWS_ERROR:
+        case RESULTS_ERROR:
             return {
                 ...state,
                 error: action.payload,
@@ -189,4 +190,6 @@ export default (state, action) => {
         default:
             return state;
     }
-}
+};
+
+export default moviesReducer;
