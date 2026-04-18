@@ -21,6 +21,11 @@ import {
     GET_VIDEOS,
     VIDEOS_ERROR,
     VIDEOS_LOADING,
+    GET_TV_GENRES,
+    TV_GENRES_LOADING,
+    GET_SEASON,
+    SEASON_LOADING,
+    SEASON_ERROR,
 } from '../types';
 
 
@@ -142,17 +147,34 @@ export default (state, action) => {
                 error: action.payload,
                 videos_loading: false
             }
-        case REVIEWS_ERROR:
+        case TV_GENRES_LOADING:
             return {
                 ...state,
-                error: action.payload,
-                results_loading: false
+                tvGenres_loading: true
             }
-        case REVIEWS_ERROR:
+        case SEASON_LOADING:
+            return {
+                ...state,
+                season: null,
+                season_loading: true
+            }
+        case GET_TV_GENRES:
+            return {
+                ...state,
+                tvGenres: action.payload,
+                tvGenres_loading: false
+            }
+        case GET_SEASON:
+            return {
+                ...state,
+                season: action.payload,
+                season_loading: false
+            }
+        case SEASON_ERROR:
             return {
                 ...state,
                 error: action.payload,
-                reviews_loading: false
+                season_loading: false
             }
 
         case CLEAR_TV_ERRORS:

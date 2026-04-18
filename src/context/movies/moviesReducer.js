@@ -22,7 +22,9 @@ import {
     VIDEOS_ERROR,
     VIDEOS_LOADING,
     RESULTS_LOADING,
-    GET_RESULTS
+    GET_RESULTS,
+    GET_GENRES,
+    GENRES_LOADING,
 } from '../types';
 
 
@@ -166,6 +168,17 @@ export default (state, action) => {
                 ...state,
                 error: action.payload,
                 reviews_loading: false
+            }
+        case GENRES_LOADING:
+            return {
+                ...state,
+                genres_loading: true
+            }
+        case GET_GENRES:
+            return {
+                ...state,
+                genres: action.payload,
+                genres_loading: false
             }
         case CLEAR_ERRORS:
             return {

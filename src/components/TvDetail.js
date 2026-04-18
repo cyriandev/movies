@@ -1,192 +1,375 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import moment from 'moment';
+import {
+  RiArrowRightUpLine,
+  RiArrowLeftLine,
+  RiCalendarLine,
+  RiClapperboardLine,
+  RiImageLine,
+  RiStarSFill,
+  RiTv2Line,
+} from 'react-icons/ri';
 import TvContext from '../context/tv/tvContext';
-import { useParams } from "react-router-dom";
-import moment from "moment";
 import Cast from './Cast';
-import Video from './Video';
-import Review from './Review';
-import { Helmet } from 'react-helmet';
 import Crew from './Crew';
+import Review from './Review';
+import Video, { sortVideosByPriority } from './Video';
+import Reveal from './Reveal';
+import Seo from './Seo';
+
+const TABS = ['Seasons', 'Videos', 'Reviews', 'Cast', 'Crew'];
+
+const renderTabCount = (tab, reviews, videos, seasons) => {
+  if (tab === 'Reviews') {
+    return reviews.length;
+  }
+
+  if (tab === 'Videos') {
+    return videos.length;
+  }
+
+  if (tab === 'Seasons') {
+    return seasons.length;
+  }
+
+  return null;
+};
 
 const TvDetail = () => {
+  const { id } = useParams();
+  const tvContext = useContext(TvContext);
+  const {
+    getTv, tv_loading, tv,
+    getCast, cast_loading, credits,
+    getReviews, reviews_loading, reviews,
+    getVideos, videos_loading, videos,
+  } = tvContext;
 
-    let { id } = useParams();
+  const [activeTab, setActiveTab] = useState('Seasons');
 
-    const tvContext = useContext(TvContext);
-    const {
-        getTv,
-        tv_loading,
-        tv,
-        getCast,
-        cast_loading,
-        credits,
-        getReviews,
-        reviews_loading,
-        reviews,
-        getVideos,
-        videos_loading,
-        videos
-    } = tvContext;
+  useEffect(() => {
+    setActiveTab('Seasons');
+    getTv(id);
+    getCast(id);
+    getReviews(id);
+    getVideos(id);
+    window.scrollTo(0, 0);
+    // eslint-disable-next-line
+  }, [id]);
 
-    useEffect(() => {
-        getTv(id);
-        getCast(id);
-        getReviews(id);
-        getVideos(id);
-
-        window.scrollTo(0, 0);
-        // eslint-disable-next-line
-    }, [id]);
-
-    if (tv_loading) {
-        return <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}><div className="spinner"></div></div>
-    }
-
-    let { seasons } = tv;
+  if (tv_loading) {
     return (
-        <div className="container">
-            <Helmet>
-                <title>{tv.name}</title>
-                <meta name="description" content={`${tv.overview}`} />
-            </Helmet>
-            <div className="hero" style={{ backgroundImage: `url('https://image.tmdb.org/t/p/original/${tv.backdrop_path}')` }}>
-                <div className="layer">
-                    <div className="row">
-                        <div className="col-md-4">
-                            <img src={`https://image.tmdb.org/t/p/original/${tv.poster_path}`} alt={tv.name} loading="lazy" />
-                        </div>
-                        <div className="d-flex align-items-center col-md-8">
-                            <div className="mt-5 descr">
-                                <h1>{tv.name} ({tv.original_language})</h1>
-                                <p>
-                                    {moment(tv.first_air_date).format("DD MMMM YYYY") + ' (first aired)'}
-                                        &nbsp;&nbsp;<span>&bull;</span>&nbsp;&nbsp; {tv.tagline} </p>
+      <div className="double-shell w-full">
+        <div className="double-core flex h-[38rem] items-center justify-center">
+          <div className="spinner" />
+        </div>
+      </div>
+    );
+  }
 
-                                <h3>Overview</h3>
-                                <p>{tv.overview}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  const overview = tv.overview || 'No overview available for this series yet.';
+  const seasons = tv.seasons || [];
+  const genres = tv.genres || [];
+  const castMembers = credits.cast?.slice(0, 12) || [];
+  const crewMembers = credits.crew?.slice(0, 12) || [];
+  const sortedVideos = sortVideosByPriority(videos);
+  const featuredVideo = sortedVideos[0];
+  const remainingVideos = sortedVideos.slice(1);
+
+  const metadata = [
+    {
+      label: 'First aired',
+      value: tv.first_air_date ? moment(tv.first_air_date).format('DD MMM YYYY') : 'TBA',
+      icon: RiCalendarLine,
+    },
+    {
+      label: 'Seasons',
+      value: tv.number_of_seasons || 0,
+      icon: RiTv2Line,
+    },
+    {
+      label: 'Rating',
+      value: tv.vote_average ? tv.vote_average.toFixed(1) : 'N/A',
+      icon: RiStarSFill,
+    },
+    {
+      label: 'Status',
+      value: tv.status || 'Unknown',
+      icon: RiClapperboardLine,
+    },
+  ];
+
+  const titleSlug = (tv.name || 'series').toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+
+  return (
+    <div className="w-full space-y-6">
+      <Seo title={`${tv?.name || 'TV Show'} - moviesntv`} description={overview} />
+
+      <Reveal>
+        <div className="double-shell">
+          <div className="double-core relative overflow-hidden">
+            <div className="absolute inset-0">
+              {tv.backdrop_path && (
+                <img
+                  src={`https://image.tmdb.org/t/p/original/${tv.backdrop_path}`}
+                  alt={tv.name}
+                  className="h-full w-full object-cover object-center opacity-45"
+                />
+              )}
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,6,5,0.95)_0%,rgba(7,6,5,0.82)_38%,rgba(7,6,5,0.48)_72%,rgba(7,6,5,0.9)_100%)]" />
             </div>
 
-
-
-
-
-
-            <section className="mt-4">
-
-                <ul className="nav nav-tabs" id="myTab" role="tablist">
-                    <li className="nav-item" role="presentation">
-                        <button style={{ paddingLeft: 0, }} className="nav-link active md" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Cast</button>
-                    </li>
-
-                    <li className="nav-item" role="presentation">
-                        <button className="nav-link md" id="crew-tab" data-bs-toggle="tab" data-bs-target="#crew" type="button" role="tab" aria-controls="crew" aria-selected="true">Crew</button>
-                    </li>
-                    <li className="nav-item" role="presentation">
-                        <button className="nav-link md" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Reviews ({reviews_loading ? '0' : reviews.length})</button>
-                    </li>
-                    <li className="nav-item" role="presentation">
-                        <button className="nav-link md" id="seasons-tab" data-bs-toggle="tab" data-bs-target="#seasons" type="button" role="tab" aria-controls="seasons" aria-selected="true">Seasons ({tv.number_of_seasons})</button>
-                    </li>
-                    <li className="nav-item" role="presentation">
-                        <button className="nav-link md" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Videos ({videos_loading ? '0' : videos.length})</button>
-                    </li>
-                </ul>
-                <div className="tab-content" id="myTabContent">
-                    <div className="tab-pane  show active mt-2" id="home" role="tabpanel" aria-labelledby="home-tab">
-                        <div className="row g-0">
-
-                            {
-                                cast_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
-
-                                    credits.cast &&
-                                    credits.cast.map((item, index) => {
-                                        if (index < 6)
-                                            return (
-                                                <Cast key={index} cast={item} />
-                                            )
-                                    })
-                            }
-
-
-                        </div>
+            <div className="relative grid gap-6 px-5 py-5 sm:px-6 sm:py-6 lg:grid-cols-[15rem,1fr] lg:px-8 lg:py-8">
+              <div className="double-shell max-w-[15rem]">
+                <div className="double-core overflow-hidden">
+                  {tv.poster_path ? (
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500/${tv.poster_path}`}
+                      alt={tv.name}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                      <div className="flex aspect-[0.72] items-center justify-center text-[var(--accent)]">
+                      <RiTv2Line size={52} />
                     </div>
-                    <div className="tab-pane mt-2" id="crew" role="tabpanel" aria-labelledby="crew-tab">
-                        <div className="row g-0">
-
-                            {
-                                cast_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
-                                    credits.crew &&
-                                    credits.crew.map((item, index) => {
-                                        if (index < 6)
-                                            return (
-                                                <Crew key={index} crew={item} />
-                                            )
-                                    })
-                            }
-
-
-                        </div>
-                    </div>
-                    <div className="tab-pane  mt-5" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <div className="row g-0">
-
-                            {
-                                reviews_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
-                                    reviews.map((item, index) => (
-                                        <Review key={index} item={item} />
-                                    ))
-                            }
-
-                        </div>
-                    </div>
-                    <div className="tab-pane  mt-5" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                        <div className="row g-0">
-                            {
-                                videos_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> : (
-                                    videos.map((item, index) => (
-                                        <Video key={index} video={item} />
-                                    ))
-                                )
-                            }
-
-
-                        </div>
-                    </div>
-                    <div className="tab-pane  mt-5" id="seasons" role="tabpanel" aria-labelledby="seasons-tab">
-                        <div className="row g-0">
-                            {seasons &&
-
-                                seasons.map((item, index) => (
-                                    <div key={index} className="d-flex review seasons">
-                                        <div className="">
-
-                                            <img src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
-                                                alt={item.name}
-                                                width="90"
-                                                loading="lazy" />
-                                        </div>
-                                        <div className="pl-3 detail">
-                                            <h1>{item.name} </h1>
-                                            <p>{moment(item.air_date).format("YYYY")} | {item.episode_count} Episodes</p>
-                                            <p>premiered on {moment(item.air_date).format("DD MMMM YYYY")}</p>
-
-                                        </div>
-                                    </div>
-                                ))
-
-
-                            }
-
-                        </div>
-                    </div>
+                  )}
                 </div>
-            </section>
-        </div>
-    )
-}
+              </div>
 
-export default TvDetail
+              <div className="flex flex-col justify-between">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <Link
+                      to="/tv"
+                      className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full bg-[#242526] px-3.5 py-2 text-[0.68rem] uppercase tracking-[0.2em] text-[#f5f6fb] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:bg-[#2b2c2d]"
+                    >
+                      <RiArrowLeftLine size={16} />
+                      Back to series
+                    </Link>
+
+                  </div>
+
+                  <h1 className="headline-gradient mt-4 text-[2.7rem] leading-[0.92] sm:text-[4rem]">
+                    {tv.name}
+                  </h1>
+
+                  {tv.tagline && (
+                    <p className="mt-3 text-base italic text-[#c9c1a1]">&ldquo;{tv.tagline}&rdquo;</p>
+                  )}
+
+                  <p className="mt-4 max-w-3xl text-sm leading-7 text-[#9ca1b7]">
+                    {overview}
+                  </p>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-2.5">
+                  {genres.map((genre) => (
+                    <span
+                      key={genre.id}
+                      className="rounded-full bg-[#242526] px-3 py-1.5 text-[0.64rem] uppercase tracking-[0.18em] text-[#f5f6fb]"
+                    >
+                      {genre.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+
+      <Reveal delay={80}>
+        <div className="grid gap-2.5 lg:grid-cols-4">
+          {metadata.map(({ label, value, icon: Icon }) => (
+            <div key={label} className="double-shell">
+              <div className="double-core h-full px-3.5 py-3.5">
+                <div className="flex items-center gap-2.5 text-[var(--accent)]">
+                  <Icon size={16} />
+                  <p className="text-[0.62rem] uppercase tracking-[0.22em] text-[#7c8197]">{label}</p>
+                </div>
+                <p className="mt-3 text-[1.45rem] leading-none text-[#f5f6fb]">{value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal delay={140}>
+        <div className="double-shell">
+          <div className="double-core px-3.5 py-3.5 sm:px-4">
+            <div className="flex justify-start">
+              <div className="flex flex-wrap items-center gap-1.5 rounded-[0.85rem] bg-[#242526] p-1.5">
+                {TABS.map((tab) => {
+                  const count = renderTabCount(tab, reviews, videos, seasons);
+
+                  return (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`tab-pill ${activeTab === tab ? 'tab-pill-active' : ''}`}
+                    >
+                      {tab}
+                      {count !== null ? ` (${count})` : ''}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+
+      <Reveal delay={180}>
+        {activeTab === 'Cast' && (
+          cast_loading ? (
+            <div className="double-shell">
+              <div className="double-core flex h-60 items-center justify-center">
+                <div className="spinner" />
+              </div>
+            </div>
+          ) : (
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {castMembers.map((item) => (
+                <Cast key={item.id} cast={item} />
+              ))}
+            </div>
+          )
+        )}
+
+        {activeTab === 'Crew' && (
+          cast_loading ? (
+            <div className="double-shell">
+              <div className="double-core flex h-60 items-center justify-center">
+                <div className="spinner" />
+              </div>
+            </div>
+          ) : (
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {crewMembers.map((item, index) => (
+                <Crew key={`${item.credit_id || item.name}-${index}`} crew={item} />
+              ))}
+            </div>
+          )
+        )}
+
+        {activeTab === 'Reviews' && (
+          reviews_loading ? (
+            <div className="double-shell">
+              <div className="double-core flex h-60 items-center justify-center">
+                <div className="spinner" />
+              </div>
+            </div>
+          ) : reviews.length === 0 ? (
+            <div className="double-shell">
+              <div className="double-core px-6 py-14 text-center">
+                <p className="text-[0.68rem] uppercase tracking-[0.24em] text-[#7c8197]">No reviews</p>
+                <p className="mt-3 text-[1.7rem] text-[#f5f6fb]">No written reviews are available yet.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {reviews.map((item) => (
+                <Review key={item.id} item={item} />
+              ))}
+            </div>
+          )
+        )}
+
+        {activeTab === 'Seasons' && (
+          seasons.length === 0 ? (
+            <div className="double-shell">
+              <div className="double-core px-6 py-14 text-center">
+                <p className="text-[0.68rem] uppercase tracking-[0.24em] text-[#7c8197]">No seasons</p>
+                <p className="mt-3 text-[1.7rem] text-[#f5f6fb]">Season data is not available for this series.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="grid gap-3 lg:grid-cols-2">
+              {seasons.map((season) => (
+                <Link
+                  key={season.id}
+                  to={`/tv/${id}/${titleSlug}/season/${season.season_number}/${(season.name || `season-${season.season_number}`).toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`}
+                  className="group double-shell block transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5"
+                >
+                  <div className="double-core flex h-full gap-3 px-3.5 py-3.5">
+                    <div className="aspect-[0.92] w-28 flex-shrink-0 self-start overflow-hidden rounded-[0.8rem] bg-[#242526]">
+                      {season.poster_path ? (
+                        <img
+                          src={`https://image.tmdb.org/t/p/w300/${season.poster_path}`}
+                          alt={season.name}
+                          className="h-full w-full object-cover object-center"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-[var(--accent)]">
+                          <RiImageLine size={24} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-1 gap-3">
+                      <div className="flex min-w-0 flex-1 flex-col justify-between">
+                        <div>
+                          <p className="text-[0.62rem] uppercase tracking-[0.2em] text-[#7c8197]">Season</p>
+                          <div className="mt-2 flex flex-wrap items-center gap-2">
+                            <h3 className="text-[1.2rem] leading-[1.04] text-[#f5f6fb]">{season.name}</h3>
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#242526] px-2 py-1 text-[0.72rem] text-[#e7e1d7]">
+                              <RiStarSFill className="text-[var(--accent)]" size={12} />
+                              {season.vote_average != null ? Number(season.vote_average).toFixed(1) : 'N/A'}
+                            </span>
+                          </div>
+                          <p className="mt-2 text-[0.84rem] leading-6 text-[#9ca1b7]">
+                            {season.air_date ? moment(season.air_date).format('MMMM YYYY') : 'TBA'} · {season.episode_count} episodes
+                          </p>
+                        </div>
+                        <p className="mt-3 line-clamp-3 text-[0.84rem] leading-6 text-[#9ca1b7]">
+                          {season.overview || 'No overview is available for this season yet.'}
+                        </p>
+                        <div className="mt-4 flex items-center justify-end text-sm text-[#9ca1b7]">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/[0.06] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px]">
+                            <RiArrowRightUpLine size={16} />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )
+        )}
+
+        {activeTab === 'Videos' && (
+          videos_loading ? (
+            <div className="double-shell">
+              <div className="double-core flex h-60 items-center justify-center">
+                <div className="spinner" />
+              </div>
+            </div>
+          ) : videos.length === 0 ? (
+            <div className="double-shell">
+              <div className="double-core px-6 py-14 text-center">
+                <p className="text-[0.68rem] uppercase tracking-[0.24em] text-[#7c8197]">No videos</p>
+                <p className="mt-3 text-[1.7rem] text-[#f5f6fb]">No trailers or related video clips are available.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {featuredVideo && <Video key={featuredVideo.id} video={featuredVideo} featured />}
+              {remainingVideos.length > 0 && (
+                <div className="grid gap-3 lg:grid-cols-2">
+                  {remainingVideos.map((item) => (
+                    <Video key={item.id} video={item} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        )}
+      </Reveal>
+    </div>
+  );
+};
+
+export default TvDetail;

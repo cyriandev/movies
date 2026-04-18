@@ -1,51 +1,65 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import moment from "moment";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import moment from 'moment';
+import { RiArrowRightUpLine, RiFilmLine, RiStarSFill, RiTv2Line } from 'react-icons/ri';
 
 const Result = ({ item }) => {
+    if (!item.media_type || (!item.title && !item.name)) return null;
+
+    const title = item.media_type === 'movie' ? item.title : item.name;
+    const date = item.media_type === 'movie' ? item.release_date : item.first_air_date;
+    const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    const to =
+        item.media_type === 'movie'
+            ? `/movies/${item.id}/${slug}`
+            : `/tv/${item.id}/${slug}`;
+
     return (
-        <div className="col-sm-4 col-md-3">
-            <Link to={item.media_type === "movie" ? `/movie/${item.id}/${item.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}` : `/tv/${item.id}/${item.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`}>
-
-                <div className="movie">
-                    <div className="poster">
-                        {item.poster_path ?
-                            <img
-                                src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
-                                alt={""}
-                                width="100%"
-                                loading="lazy"
-                            />
-                            :
-                            <div className="no_img">
-
-                                <img src={`http://via.placeholder.com/318x476`} alt="no-image" loading="lazy" width="100%" />
-                                <div className="image_icon d-flex align-items-center justify-content-center">
-                                    <ion-icon name="image-outline"></ion-icon>
-                                </div>
-                            </div>
-                        }
-
-                    </div>
-                    <div className="details">
-                        {item.media_type === "tv" ? <h4><span className="badge bg-light text-dark">TV</span> {item.name}</h4> : <h4><span className="badge bg-light text-dark ">Movie</span> {item.title}</h4>}
-
-                        <div className="rate">
-                            <ion-icon name="star"></ion-icon>
-                            <p>{item.vote_average * 10}% </p>
+        <Link to={to} className="group block">
+            <div className="double-shell h-full transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-y-2">
+                <div className="double-core flex h-full flex-col">
+                    <div className="relative aspect-[0.78] overflow-hidden bg-[#232432]">
+                    {item.poster_path ? (
+                        <img
+                            src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`}
+                            alt={title}
+                            className="h-full w-full object-cover transition-all duration-[900ms] ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:scale-[1.06]"
+                            loading="lazy"
+                        />
+                    ) : (
+                        <div className="flex h-full w-full items-center justify-center text-[var(--accent)]">
+                            {item.media_type === 'tv' ? <RiTv2Line size={38} /> : <RiFilmLine size={38} />}
                         </div>
-                        <div className="date">
-                            {item.media_type === "tv" ? <p>First aired: {moment(item.first_air_date).format("DD MMMM YYYY")}</p> : <h4>    <p>{moment(item.release_date).format("DD MMMM YYYY")}</p></h4>}
-
-
+                    )}
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(24,25,36,0.04)_0%,rgba(24,25,36,0.18)_55%,rgba(24,25,36,0.9)_100%)]" />
+                    <div className="absolute left-4 top-4 rounded-full bg-[#2b2c2d]/88 px-3 py-2 text-[0.62rem] uppercase tracking-[0.22em] text-[#e7e1d7]">
+                        {item.media_type === 'tv' ? 'TV' : 'Film'}
+                    </div>
+                    <div className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-black/78 px-3 py-2 text-xs font-medium text-white shadow-[0_8px_18px_rgba(0,0,0,0.34)] ring-1 ring-white/10 backdrop-blur-md">
+                        <RiStarSFill className="text-[var(--accent)]" size={13} />
+                        {item.vote_average != null ? Number(item.vote_average).toFixed(1) : 'N/A'}
+                    </div>
+                </div>
+                    <div className="flex flex-1 flex-col justify-between px-4 py-4">
+                        <div>
+                            <p className="text-[0.62rem] uppercase tracking-[0.22em] text-[#7c8197]">
+                                {date ? moment(date).format('YYYY') : 'Unknown year'}
+                            </p>
+                            <h3 className="mt-3 line-clamp-2 text-[1.35rem] leading-[1.05] text-[#e7e1d7] transition-colors duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:text-[var(--accent)]">
+                                {title}
+                            </h3>
+                        </div>
+                        <div className="mt-5 flex items-center justify-between text-sm text-[#9ca1b7]">
+                            <span>Open profile</span>
+                            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.06] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px]">
+                                <RiArrowRightUpLine size={16} />
+                            </span>
                         </div>
                     </div>
                 </div>
-            </Link>
+            </div>
+        </Link>
+    );
+};
 
-
-        </div>
-    )
-}
-
-export default Result
+export default Result;

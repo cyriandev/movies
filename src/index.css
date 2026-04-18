@@ -1,3 +1,370 @@
-body {
-  background-color: #1c1e21;
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: gorthia-black;
+  src: url('./font/Gordita Black.otf');
+}
+
+@font-face {
+  font-family: gorthia-regular;
+  src: url('./font/Gordita Regular.otf');
+}
+
+@font-face {
+  font-family: gorthia-light;
+  src: url('./font/Gordita Light.otf');
+}
+
+@font-face {
+  font-family: gorthia-medium;
+  src: url('./font/Gordita Medium.otf');
+}
+
+@font-face {
+  font-family: gorthia-thin;
+  src: url('./font/Gordita Thin.otf');
+}
+
+@font-face {
+  font-family: gorthia-ultra;
+  src: url('./font/Gordita Ultra.otf');
+}
+
+@font-face {
+  font-family: gorthia-bold;
+  src: url('./font/Gordita Bold.otf');
+}
+
+:root {
+  --bg: #27292c;
+  --bg-soft: #242526;
+  --panel: #242526;
+  --panel-strong: #242526;
+  --panel-soft: #242526;
+  --line: rgba(255, 255, 255, 0.06);
+  --line-soft: rgba(255, 255, 255, 0.03);
+  --text: #e7e1d7;
+  --muted: #979188;
+  --gold: #ffcc35;
+  --gold-soft: #d6a81f;
+  --accent: #ffcc35;
+  --accent-rgb: 255, 204, 53;
+  --shadow: 0 20px 40px rgba(17, 18, 28, 0.12);
+}
+
+.spinner {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-top-color: var(--gold);
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2.5rem, 0) scale(0.985);
+    filter: blur(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    font-family: 'Instrument Sans', gorthia-regular, ui-sans-serif, system-ui, sans-serif;
+    background: linear-gradient(180deg, #27292c 0%, #27292c 52%, #27292c 100%);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.03), transparent 22%);
+    opacity: 0.14;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 100% 100%, rgba(var(--accent-rgb), 0.1), transparent 22%);
+    opacity: 0.12;
+    z-index: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Syne', gorthia-bold, ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.045em;
+    font-weight: 700;
+  }
+
+  button,
+  input,
+  select {
+    font-family: 'Instrument Sans', gorthia-medium, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+  }
+
+  ::selection {
+    background: rgba(var(--accent-rgb), 0.28);
+    color: #1b1c27;
+  }
+}
+
+@layer components {
+  .double-shell {
+    border-radius: 0.9rem;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    position: relative;
+  }
+
+  .double-shell::before {
+    display: none;
+  }
+
+  .double-core {
+    border-radius: inherit;
+    background: var(--panel);
+    border: none;
+    box-shadow: none;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .luxury-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border-radius: 999px;
+    padding: 0.38rem 0.78rem;
+    font-size: 0.62rem;
+    line-height: 1;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.1);
+    border: none;
+  }
+
+  .glass-pill {
+    background: var(--panel-soft);
+    border: none;
+    box-shadow: none;
+    border-radius: 0.8rem;
+  }
+
+  .eyebrow-dot {
+    width: 0.35rem;
+    height: 0.35rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ffe28a, var(--accent));
+    box-shadow: 0 0 16px rgba(var(--accent-rgb), 0.35);
+  }
+
+  .island-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.32rem 0.32rem 0.32rem 1rem;
+    border-radius: 999px;
+    color: #f5f6fb;
+    background: rgba(36, 37, 38, 0.96);
+    border: 1px solid rgba(var(--accent-rgb), 0.22);
+    transition: transform 700ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 700ms cubic-bezier(0.32, 0.72, 0, 1), filter 700ms cubic-bezier(0.32, 0.72, 0, 1);
+    box-shadow:
+      0 12px 26px rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .island-button:hover {
+    transform: translate3d(0, -2px, 0);
+    border-color: rgba(var(--accent-rgb), 0.34);
+    box-shadow:
+      0 14px 30px rgba(0, 0, 0, 0.24),
+      0 0 0 1px rgba(var(--accent-rgb), 0.08);
+  }
+
+  .island-button:active {
+    transform: scale(0.985);
+  }
+
+  .icon-island {
+    width: 2.15rem;
+    height: 2.15rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #1b1c27;
+    background: linear-gradient(135deg, #ffe28a, var(--accent));
+    border: none;
+    box-shadow: 0 8px 18px rgba(var(--accent-rgb), 0.18);
+    transition: transform 700ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 700ms cubic-bezier(0.32, 0.72, 0, 1), filter 700ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .island-button:hover .icon-island {
+    transform: translate3d(0.2rem, -1px, 0) scale(1.04);
+    box-shadow: 0 10px 22px rgba(var(--accent-rgb), 0.24);
+    filter: saturate(1.03);
+  }
+
+  .input-shell {
+    border-radius: 0.8rem;
+    background: #2b2c2d;
+    border: 1px solid rgba(231, 225, 215, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .input-shell:focus-within {
+    border-color: rgba(var(--accent-rgb), 0.24);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 0 0 3px rgba(var(--accent-rgb), 0.14);
+  }
+
+  .tab-pill {
+    border-radius: 999px;
+    padding: 0.68rem 1rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: none;
+    background: transparent;
+    transition: color 700ms cubic-bezier(0.32, 0.72, 0, 1), background-color 700ms cubic-bezier(0.32, 0.72, 0, 1), transform 700ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .tab-pill:hover {
+    color: #e7e1d7;
+    transform: translate3d(0, -1px, 0);
+  }
+
+  .tab-pill-active {
+    color: #e7e1d7;
+    background: rgba(var(--accent-rgb), 0.12);
+    box-shadow: none;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0) scale(0.992);
+    filter: blur(8px);
+    transition:
+      opacity 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      filter 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+
+  .headline-gradient {
+    background: linear-gradient(180deg, #f0ebe4 0%, #ddd7ce 52%, #b2aca2 100%);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .floating-surface {
+    border-radius: 0.9rem;
+    background: var(--panel-soft);
+    border: none;
+    box-shadow: none;
+  }
+}
+
+@layer utilities {
+  .font-thin {
+    font-family: 'Instrument Sans', gorthia-thin, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 100;
+  }
+
+  .font-light {
+    font-family: 'Instrument Sans', gorthia-light, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 300;
+  }
+
+  .font-normal {
+    font-family: 'Instrument Sans', gorthia-regular, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 400;
+  }
+
+  .font-medium {
+    font-family: 'Instrument Sans', gorthia-medium, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 500;
+  }
+
+  .font-bold {
+    font-family: 'Syne', gorthia-bold, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+  }
+
+  .font-black {
+    font-family: 'Syne', gorthia-black, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 900;
+  }
+
+  .text-muted {
+    color: var(--muted);
+  }
 }

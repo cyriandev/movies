@@ -1,167 +1,131 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState, useMemo } from 'react';
 import TvContext from '../context/tv/tvContext';
-import { Link } from "react-router-dom";
-import moment from "moment";
 import TvItem from './TvItem';
-import { Helmet } from 'react-helmet';
+import HeroSlider from './HeroSlider';
+import Filters from './Filters';
+import Reveal from './Reveal';
+import Seo from './Seo';
 
 const Tv = () => {
     const tvContext = useContext(TvContext);
     const {
-        getOnAir,
-        onAir_loading,
-        onAir,
-        getTopRated,
-        top_rated_loading,
-        top_rated,
-        getPopular,
-        popular_loading,
-        popular
+        getOnAir, onAir_loading, onAir,
+        getTopRated, top_rated_loading, top_rated,
+        getPopular, popular_loading, popular,
+        getTvGenres, tvGenres,
     } = tvContext;
 
+    const [activeTab, setActiveTab] = useState('popular');
+    const [selectedGenres, setSelectedGenres] = useState([]);
+    const [sortBy, setSortBy] = useState('default');
 
     useEffect(() => {
         getOnAir();
         getTopRated();
         getPopular();
+        getTvGenres();
         // eslint-disable-next-line
-    }, [])
+    }, []);
 
+    const sourceData = activeTab === 'popular' ? popular : top_rated;
+    const loading = activeTab === 'popular' ? popular_loading : top_rated_loading;
+
+    const filteredShows = useMemo(() => {
+        let data = [...sourceData];
+        if (selectedGenres.length > 0) {
+            data = data.filter((t) => t.genre_ids?.some((id) => selectedGenres.includes(id)));
+        }
+        if (sortBy === 'latest') {
+            data = [...data].sort((a, b) => new Date(b.first_air_date) - new Date(a.first_air_date));
+        } else if (sortBy === 'oldest') {
+            data = [...data].sort((a, b) => new Date(a.first_air_date) - new Date(b.first_air_date));
+        } else if (sortBy === 'rating_desc') {
+            data = [...data].sort((a, b) => b.vote_average - a.vote_average);
+        } else if (sortBy === 'rating_asc') {
+            data = [...data].sort((a, b) => a.vote_average - b.vote_average);
+        }
+        return data;
+    }, [sourceData, selectedGenres, sortBy]);
+
+    const toggleGenre = (id) => {
+        setSelectedGenres((prev) =>
+            prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
+        );
+    };
 
     return (
-        <div className="container">
+        <div className="w-full space-y-8">
+            <Seo
+                title="moviesntv - TV Shows"
+                description="Get TV show information from TMDB's API"
+            />
 
-            <Helmet>
-                <title>Movies and tv shows</title>
-                <meta name="description" content="Get Movies and tv show information from TMDB's API" />
-            </Helmet>
-            <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
-                <div className="carousel-inner">
+            {onAir_loading ? (
+                <div className="double-shell">
+                    <div className="double-core flex h-[28rem] items-center justify-center">
+                        <div className="spinner" />
+                    </div>
+                </div>
+            ) : (
+                <HeroSlider items={onAir} type="tv" />
+            )}
 
-
-                    {onAir_loading ? <div className="carousel-item active d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
-
-                        onAir.slice(0, 5).map((item, index) =>
-                        (
-                            <div key={index} className={`carousel-item ${index === 0 && "active"}`}>
-                                <div className="slide-item" style={{
-                                    backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 100%), url('https://image.tmdb.org/t/p/original/${item.backdrop_path}')`
-                                }}>
-                                    <Link to={`/tv/${item.id}/${item.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`} className="cta mt-2">
-
-                                        <div className="slider">
-                                            <div className="info">
-                                                <span className="badge bg-light text-dark">On Air</span>
-                                                <h1>
-                                                    {item.name}
-                                                </h1>
-                                                <h5>
-                                                    {moment(item.first_air_date).format("DD MMMM YYYY")}
-                                                &nbsp;
-                                                &nbsp;
-                                                <span>&bull;</span>
-                                                &nbsp;
-                                                &nbsp;
-
-                                                {item.vote_average}/10
-                                            </h5>
-                                                <p>
-                                                    {item.overview}
-                                                </p>
-
-                                                {/* <div className="controls mt-3 ">
-                                                    <a href="#" className="mr-5" style={{ marginRight: 18 }} type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev"><ion-icon name="chevron-back-outline"></ion-icon></a>
-                                                    <a href="#" className="" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next"><ion-icon name="chevron-forward-outline"></ion-icon></a>
-                                                </div> */}
-                                            </div>
-                                        </div>
-                                    </Link>
+            <Reveal delay={60}>
+                <div className="double-shell">
+                    <div className="double-core px-4 py-4 sm:px-5 sm:py-5">
+                        <Filters
+                            genres={tvGenres}
+                            selectedGenres={selectedGenres}
+                            onGenreToggle={toggleGenre}
+                            onClearGenres={() => setSelectedGenres([])}
+                            sortBy={sortBy}
+                            onSortChange={setSortBy}
+                            headerControls={
+                                <div className="flex flex-wrap items-center gap-2 rounded-[0.9rem] bg-[#242526] p-1.5">
+                                    {[
+                                        { value: 'popular', label: 'Most Popular' },
+                                        { value: 'top_rated', label: 'Top Rated' },
+                                    ].map((tab) => (
+                                        <button
+                                            key={tab.value}
+                                            onClick={() => setActiveTab(tab.value)}
+                                            className={`tab-pill ${activeTab === tab.value ? 'tab-pill-active' : ''}`}
+                                        >
+                                            {tab.label}
+                                        </button>
+                                    ))}
                                 </div>
-                            </div>
-
-                        )
-
-                        )}
-                </div>
-            </div>
-
-
-            <ul className="nav nav-tabs" id="myTab" role="tablist">
-                <li className="nav-item" role="presentation">
-                    <button style={{ paddingLeft: 0 }} className="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">MOST POPULAR</button>
-                </li>
-                <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">TOP RATED</button>
-                </li>
-                {/* <li className="nav-item" role="presentation">
-                    <button className="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">TV</button>
-                </li> */}
-            </ul>
-
-
-
-            <div className="tab-content" id="myTabContent">
-                <div className="tab-pane mt-5" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    {/* <p className="label">Movies</p> */}
-                    <div className="row g-0">
-                        {
-                            top_rated_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
-                                top_rated.map((tv, index) => (
-                                    <TvItem key={index} tv={tv} />
-                                ))
-                        }
+                            }
+                        />
                     </div>
                 </div>
-                <div className="tab-pane  show active  mt-5" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    {/* <p className="label">Movies</p> */}
-                    <div className="row g-0">
+            </Reveal>
 
-                        {
-                            popular_loading ? <div className="d-flex justify-content-center align-items-center" style={{ height: 400 }}><div className="spinner"></div></div> :
-                                popular.map((tv, index) => (
-                                    <TvItem key={index} tv={tv} />
-                                ))
-                        }
-
+            <Reveal delay={180}>
+                {loading ? (
+                    <div className="double-shell">
+                        <div className="double-core flex h-64 items-center justify-center">
+                            <div className="spinner" />
+                        </div>
                     </div>
-                </div>
-                <div className="tab-pane  mt-5" id="contact" role="tabpanel" aria-labelledby="contact-tab"> <p className="label">Movies</p>
-                    <div className="row g-0">
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
+                ) : filteredShows.length === 0 ? (
+                    <div className="double-shell">
+                        <div className="double-core px-6 py-16 text-center">
+                            <p className="text-[0.68rem] uppercase tracking-[0.24em] text-[#7c8197]">No match</p>
+                             <p className="mt-3 text-[1.75rem] text-[#f5f6fb]">No TV shows fit the current selection.</p>
+                            <p className="mt-3 text-sm text-[#9ca1b7]">Adjust the rating threshold or clear a genre to reopen the stack.</p>
                         </div>
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <div className="movie">
-                                Long ago, in the fantasy world of Kumandra, humans and dragons lived together in harmony. But when an evil force threatened the land, the dragons sacrificed themselves to save humanity. Now, 500 years later, that same evil has returned and it’s up to a lone warrior, Raya, to track down the legendary last dragon to restore the fractured land and its divided people.
-                            </div>
-                        </div>
-
-                    </div></div>
-            </div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                        {filteredShows.map((tv) => (
+                            <TvItem key={tv.id} tv={tv} />
+                        ))}
+                    </div>
+                )}
+            </Reveal>
         </div>
-    )
-}
+    );
+};
 
-export default Tv
+export default Tv;

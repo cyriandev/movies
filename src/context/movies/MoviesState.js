@@ -27,7 +27,9 @@ import {
     VIDEOS_LOADING,
     GET_RESULTS,
     RESULTS_ERROR,
-    RESULTS_LOADING
+    RESULTS_LOADING,
+    GET_GENRES,
+    GENRES_LOADING,
 } from '../types';
 
 
@@ -41,6 +43,7 @@ const MoviesState = ({ children }) => {
         reviews: [],
         videos: [],
         results: [],
+        genres: [],
         error: null,
         playing_loading: false,
         movie_loading: false,
@@ -50,7 +53,7 @@ const MoviesState = ({ children }) => {
         reviews_loading: false,
         videos_loading: false,
         results_loading: false,
-
+        genres_loading: false,
     }
     const [state, dispatch] = useReducer(MoviesReducer, initialState);
 
@@ -206,6 +209,21 @@ const MoviesState = ({ children }) => {
     }
 
 
+    // Get Genres
+    const getGenres = async () => {
+        dispatch({ type: GENRES_LOADING });
+        try {
+            const res = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
+            dispatch({
+                type: GET_GENRES,
+                payload: res.data.genres
+            });
+        } catch (err) {
+            // non-critical, fail silently
+        }
+    }
+
+
     // Clear Errors
     const clearErrors = () => dispatch({
         type: CLEAR_ERRORS
@@ -233,7 +251,8 @@ const MoviesState = ({ children }) => {
             popular: state.popular,
             reviews: state.reviews,
             results: state.results,
-            plying_loading: state.plying_loading,
+            genres: state.genres,
+            playing_loading: state.playing_loading,
             cast_loading: state.cast_loading,
             movie_loading: state.movie_loading,
             top_rated_loading: state.top_rated_loading,
@@ -241,6 +260,7 @@ const MoviesState = ({ children }) => {
             reviews_loading: state.reviews_loading,
             videos_loading: state.videos_loading,
             results_loading: state.results_loading,
+            genres_loading: state.genres_loading,
             getPlaying,
             getTopRated,
             getPopular,
@@ -248,7 +268,8 @@ const MoviesState = ({ children }) => {
             getCast,
             getReviews,
             getVideos,
-            getResults
+            getResults,
+            getGenres,
 
         }}
     >

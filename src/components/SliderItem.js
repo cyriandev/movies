@@ -8,7 +8,7 @@ const SliderItem = ({ item, index }) => {
             <div className="slide-item" style={{
                 backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 100%), url('https://image.tmdb.org/t/p/original/${item.backdrop_path}')`
             }}>
-                <Link to={`/movie/${item.id}/${item.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`} className="cta mt-2">
+                <Link to={`/movies/${item.id}/${item.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`} className="cta mt-2">
                     <div className="slider">
 
                         <div className="info">
