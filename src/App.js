@@ -58,7 +58,7 @@ function App() {
   return (
     <MoviesState>
       <TvState>
-        <Router basename={process.env.PUBLIC_URL} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <div className="relative min-h-[100dvh] overflow-hidden bg-[#27292c] text-[#f5f6fb]">
             <div className="pointer-events-none fixed inset-0 z-0">
               <div className="absolute inset-y-0 left-0 hidden w-[19rem] bg-[#242526] lg:block" />
