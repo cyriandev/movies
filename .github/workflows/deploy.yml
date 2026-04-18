@@ -1,6 +1,10 @@
 on: push
 name: 🚀 Deploy website on push
 
+concurrency:
+  group: moviesntv-deploy
+  cancel-in-progress: true
+
 jobs:
   web-deploy:
     name: 🎉 Deploy
@@ -23,14 +27,21 @@ jobs:
         run: npm run build
 
       - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.2.0
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ftp.cyriandev.co.za
           username: ${{ secrets.ftp_username }}
           password: ${{ secrets.ftp_password }}
           local-dir: ./build/
           server-dir: ${{ secrets.FTP_PATH }}
-          log-level: verbose
+          log-level: standard
+          timeout: 120000
           dry-run: false
           exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
             **/*.md
+            .gitignore
+            .vscode/**
+            .DS_Store
