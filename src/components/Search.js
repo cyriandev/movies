@@ -14,6 +14,9 @@ const Search = () => {
     let q = query.get('q');
     const moviesContext = useContext(MoviesContext);
     const { getResults, results_loading, results } = moviesContext;
+    const titleResults = results.filter((item) => (
+        (item.media_type === 'movie' || item.media_type === 'tv') && (item.title || item.name)
+    ));
 
     useEffect(() => {
         if (q) getResults(q);
@@ -35,7 +38,7 @@ const Search = () => {
                                 Results for &ldquo;{q || 'your query'}&rdquo;
                             </h1>
                             <p className="text-sm text-[#9ca1b7]">
-                                {results_loading ? 'Loading results...' : `${results.length} ${results.length === 1 ? 'result' : 'results'}`}
+                                {results_loading ? 'Loading results...' : `${titleResults.length} ${titleResults.length === 1 ? 'result' : 'results'}`}
                             </p>
                         </div>
                     </div>
@@ -49,7 +52,7 @@ const Search = () => {
                             <div className="spinner" />
                         </div>
                     </div>
-                ) : results.length === 0 ? (
+                ) : titleResults.length === 0 ? (
                     <div className="double-shell">
                         <div className="double-core px-6 py-16 text-center">
                             <p className="text-[0.68rem] uppercase tracking-[0.24em] text-[#7c8197]">No result</p>
@@ -59,7 +62,7 @@ const Search = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-                        {results.map((item) => (
+                        {titleResults.map((item) => (
                             <Result key={item.id} item={item} />
                         ))}
                     </div>

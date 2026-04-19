@@ -28,10 +28,10 @@ export const Movie = ({ movie }) => {
             )}
 
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(24,25,36,0.04)_0%,rgba(24,25,36,0.18)_55%,rgba(24,25,36,0.9)_100%)]" />
-            <div className="absolute left-3 top-3 rounded-full bg-[#2b2c2d]/88 px-2.5 py-1.5 text-[0.58rem] uppercase tracking-[0.22em] text-[#e7e1d7]">
+            <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/78 px-2.5 py-1.5 text-[0.58rem] font-medium uppercase tracking-[0.22em] text-white shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md">
               Film
             </div>
-            <div className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/78 px-2.5 py-1.5 text-[0.7rem] font-medium text-white shadow-[0_8px_18px_rgba(0,0,0,0.34)] ring-1 ring-white/10 backdrop-blur-md">
+            <div className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/78 px-2.5 py-1.5 text-[0.7rem] font-medium text-white shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md">
               <RiStarSFill className="text-[var(--accent)]" size={13} />
               {movie.vote_average != null ? Number(movie.vote_average).toFixed(1) : 'N/A'}
             </div>
