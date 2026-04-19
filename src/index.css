@@ -49,6 +49,9 @@
   --line-soft: rgba(255, 255, 255, 0.03);
   --text: #e7e1d7;
   --muted: #979188;
+  --muted-warm: #a69874;
+  --muted-warm-soft: #807a73;
+  --text-warm: #c9c1a1;
   --gold: #ffcc35;
   --gold-soft: #d6a81f;
   --accent: #ffcc35;
@@ -352,12 +355,73 @@
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.06);
-    color: #858ba1;
+    color: var(--muted-warm);
     font-size: 0.62rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+  }
+
+  .action-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 2.5rem;
+    border-radius: 999px;
+    padding: 0.7rem 1rem;
+    color: #f5f6fb;
+    background: rgba(36, 37, 38, 0.42);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    transition:
+      transform 700ms cubic-bezier(0.32, 0.72, 0, 1),
+      background-color 700ms cubic-bezier(0.32, 0.72, 0, 1),
+      border-color 700ms cubic-bezier(0.32, 0.72, 0, 1),
+      color 700ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .action-pill:hover:not(:disabled) {
+    transform: translate3d(0, -1px, 0);
+    background: rgba(36, 37, 38, 0.5);
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  .action-pill:disabled {
+    cursor: wait;
+    opacity: 0.72;
+  }
+
+  .action-pill-active {
+    color: #fff1bc;
+    background: rgba(var(--accent-rgb), 0.14);
+    border-color: rgba(var(--accent-rgb), 0.24);
+  }
+
+  .action-pill-icon {
+    justify-content: center;
+    width: 2.5rem;
+    min-width: 2.5rem;
+    padding: 0;
+    gap: 0;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 0.42rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #ffe28a, var(--accent));
   }
 
   .tab-pill {

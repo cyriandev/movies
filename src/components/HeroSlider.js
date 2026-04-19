@@ -22,6 +22,7 @@ const HeroSlider = ({ items, type = 'movie' }) => {
     const item = slides[current];
     const title = type === 'movie' ? item.title : item.name;
     const date = type === 'movie' ? item.release_date : item.first_air_date;
+    const originalLanguage = item.original_language ? item.original_language.toUpperCase() : '';
     const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
     const link = type === 'movie' ? `/movies/${item.id}/${slug}` : `/tv/${item.id}/${slug}`;
 
@@ -54,9 +55,10 @@ const HeroSlider = ({ items, type = 'movie' }) => {
                             <h1 className="headline-gradient mt-4 max-w-3xl text-[2.5rem] leading-[0.92] sm:text-[3.6rem] lg:text-[4.8rem]">
                                 {title}
                             </h1>
-                            <div className="mt-4 flex flex-wrap items-center gap-2.5 text-[0.68rem] uppercase tracking-[0.2em] text-[#8f94aa]">
+                            <div className="mt-4 flex flex-wrap items-center gap-2.5 text-[0.68rem] uppercase tracking-[0.2em] text-[var(--muted-warm)]">
                                 <span className="rounded-full bg-black/78 px-3 py-1.5 text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md">
-                                    {moment(date).format('MMMM YYYY')}
+                                    {date ? moment(date).format('YYYY') : 'TBA'}
+                                    {originalLanguage ? ` · ${originalLanguage}` : ''}
                                 </span>
                                 <span className="rounded-full bg-black/78 px-3 py-1.5 text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md">
                                     {type === 'movie' ? 'Feature film' : 'Series'}

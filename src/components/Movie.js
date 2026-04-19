@@ -1,13 +1,41 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { RiArrowRightUpLine, RiFilmLine, RiStarSFill } from 'react-icons/ri';
+import { useAuth } from '../context/auth/AuthContext';
+import { useLibrary } from '../context/library/LibraryContext';
+import MovieStatusMenu from './MovieStatusMenu';
 
 export const Movie = ({ movie }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
+  const { getItemStatus, isActionPending, isInWatchlist, setMovieWatched, toggleWatchlist } = useLibrary();
   const slug = movie.title
     .toLowerCase()
     .replace(/ /g, '-')
     .replace(/[^\w-]+/g, '');
+  const inWatchlist = isInWatchlist('movie', movie.id);
+  const movieStatus = inWatchlist ? getItemStatus('movie', movie.id) : '';
+  const watchlistPending = isActionPending(`watchlist:movie:${movie.id}`);
+  const moviePending = isActionPending(`movie:${movie.id}`);
+  const statusPending = watchlistPending || moviePending;
+  const originalLanguage = movie.original_language ? movie.original_language.toUpperCase() : '';
+  const yearLabel = movie.release_date ? moment(movie.release_date).format('YYYY') : 'Coming soon';
+
+  const handleStatusSelect = async (value) => {
+    if (!user) {
+      navigate(`/login?next=${encodeURIComponent(`${location.pathname}${location.search}`)}`);
+      return;
+    }
+
+    if (value === 'remove') {
+      await toggleWatchlist({ item: movie, mediaType: 'movie' });
+      return;
+    }
+
+    await setMovieWatched({ movie, watched: value === 'watched' });
+  };
 
   return (
     <Link to={`/movies/${movie.id}/${slug}`} className="group block h-full">
@@ -31,6 +59,14 @@ export const Movie = ({ movie }) => {
             <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/78 px-2.5 py-1.5 text-[0.58rem] font-medium uppercase tracking-[0.22em] text-white shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md">
               Film
             </div>
+            <MovieStatusMenu
+              title={movie.title}
+              inWatchlist={inWatchlist}
+              pending={statusPending}
+              currentStatus={movieStatus}
+              onSelect={handleStatusSelect}
+              positionClassName="bottom-3 right-3"
+            />
             <div className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/78 px-2.5 py-1.5 text-[0.7rem] font-medium text-white shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md">
               <RiStarSFill className="text-[var(--accent)]" size={13} />
               {movie.vote_average != null ? Number(movie.vote_average).toFixed(1) : 'N/A'}
@@ -40,7 +76,8 @@ export const Movie = ({ movie }) => {
           <div className="flex flex-1 flex-col justify-between px-3.5 py-3.5">
             <div>
               <p className="text-[0.62rem] uppercase tracking-[0.22em] text-[#7c8197]">
-                {movie.release_date ? moment(movie.release_date).format('YYYY') : 'Coming soon'}
+                {yearLabel}
+                {originalLanguage ? ` · ${originalLanguage}` : ''}
               </p>
               <h3 className="mt-2.5 line-clamp-2 text-[1.2rem] leading-[1.08] text-[#e7e1d7] transition-colors duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:text-[var(--accent)]">
                 {movie.title}

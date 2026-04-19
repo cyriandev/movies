@@ -21,6 +21,7 @@ describe('Result', () => {
     );
 
     expect(screen.getByText('11 Nov 2016')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /set watch status for arrival/i })).toBeInTheDocument();
     expect(screen.queryByText(/open profile/i)).not.toBeInTheDocument();
   });
 

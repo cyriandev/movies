@@ -1,22 +1,39 @@
 import React, { useContext, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 import {
   RiArrowLeftLine,
   RiCalendarLine,
+  RiCheckboxCircleFill,
+  RiCheckboxCircleLine,
   RiClapperboardLine,
   RiImageLine,
+  RiLoader4Line,
   RiStarSFill,
   RiTv2Line,
 } from 'react-icons/ri';
 import TvContext from '../context/tv/tvContext';
+import { useAuth } from '../context/auth/AuthContext';
+import { useLibrary } from '../context/library/LibraryContext';
 import Reveal from './Reveal';
 import Seo from './Seo';
 
 const SeasonDetail = () => {
   const { id, seasonNumber, title } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const tvContext = useContext(TvContext);
   const { getTv, tv, tv_loading, getSeason, season, season_loading } = tvContext;
+  const { user } = useAuth();
+  const {
+    episodeEntriesByShow,
+    getShowProgress,
+    isActionPending,
+    isEpisodeWatched,
+    loadShowEpisodes,
+    markSeasonWatched,
+    toggleEpisodeWatched,
+  } = useLibrary();
 
   useEffect(() => {
     getTv(id);
@@ -24,6 +41,12 @@ const SeasonDetail = () => {
     window.scrollTo(0, 0);
     // eslint-disable-next-line
   }, [id, seasonNumber]);
+
+  useEffect(() => {
+    if (user && tv?.id) {
+      loadShowEpisodes(tv.id);
+    }
+  }, [loadShowEpisodes, tv?.id, user]);
 
   if (tv_loading || season_loading || !season) {
     return (
@@ -38,6 +61,17 @@ const SeasonDetail = () => {
   const showSlug = (tv?.name || title || 'series').toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
   const episodes = season.episodes || [];
   const overview = season.overview || 'No overview is available for this season yet.';
+  const showId = Number(tv?.id || id);
+  const seasonWatchedEpisodes = (episodeEntriesByShow[showId] || []).filter(
+    (entry) => Number(entry.season_number) === Number(seasonNumber)
+  ).length;
+  const showProgress = getShowProgress(showId, tv);
+  const showProgressLabel =
+    Number(showProgress.total_episodes || 0) > 0
+      ? `${showProgress.watched_episodes || 0}/${showProgress.total_episodes} series episodes watched`
+      : `${showProgress.watched_episodes || 0} series episodes watched`;
+  const seasonActionPending = isActionPending(`season:${showId}:${Number(seasonNumber)}`);
+  const allSeasonEpisodesWatched = episodes.length > 0 && seasonWatchedEpisodes >= episodes.length;
 
   const metadata = [
     {
@@ -149,6 +183,81 @@ const SeasonDetail = () => {
       </Reveal>
 
       <Reveal delay={140}>
+        {!user && (
+          <div className="double-shell mb-3">
+            <div className="double-core flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-[0.68rem] uppercase tracking-[0.22em] text-[#7c8197]">Episode tracker</p>
+                <p className="mt-2 text-sm text-[#f5f6fb]">
+                  Sign in to mark episodes as watched and sync your series progress.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="action-pill action-pill-active"
+                onClick={() => navigate(`/login?next=${encodeURIComponent(location.pathname)}`)}
+              >
+                Track progress
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="double-shell mb-3">
+          <div className="double-core flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[0.68rem] uppercase tracking-[0.22em] text-[#7c8197]">Season progress</p>
+              <h2 className="mt-2 text-[1.35rem] text-[#f5f6fb]">
+                {seasonWatchedEpisodes}/{episodes.length} episodes watched
+              </h2>
+            </div>
+
+            <div className="w-full max-w-sm space-y-3">
+              <div>
+                <p className="mb-2 text-[0.76rem] text-[#9ca1b7]">{showProgressLabel}</p>
+                <div className="progress-track">
+                  <div
+                    className="progress-fill"
+                    style={{
+                      width:
+                        episodes.length > 0
+                          ? `${Math.min(100, (seasonWatchedEpisodes / episodes.length) * 100)}%`
+                          : '0%',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {episodes.length > 0 && (
+                <button
+                  type="button"
+                  className={`action-pill min-h-[2.15rem] w-fit justify-center self-start px-3 py-2 text-[0.74rem] ${allSeasonEpisodesWatched ? 'action-pill-active' : ''}`}
+                  onClick={() => {
+                    if (!user) {
+                      navigate(`/login?next=${encodeURIComponent(location.pathname)}`);
+                      return;
+                    }
+
+                    markSeasonWatched({
+                      show: tv,
+                      seasonNumber,
+                      episodes,
+                    });
+                  }}
+                  disabled={seasonActionPending || allSeasonEpisodesWatched}
+                >
+                  {seasonActionPending ? (
+                    <RiLoader4Line className="animate-spin" size={14} />
+                  ) : (
+                    <RiCheckboxCircleFill size={14} />
+                  )}
+                  {allSeasonEpisodesWatched ? 'Season watched' : 'Mark all watched'}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
         {episodes.length === 0 ? (
           <div className="double-shell">
             <div className="double-core px-6 py-14 text-center">
@@ -176,8 +285,8 @@ const SeasonDetail = () => {
                     )}
                   </div>
 
-                  <div className="flex flex-1 flex-col justify-between gap-3">
-                    <div>
+                  <div className="flex flex-1 flex-col justify-between gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <p className="text-[0.62rem] uppercase tracking-[0.2em] text-[#7c8197]">
                           Episode {episode.episode_number}
@@ -192,11 +301,38 @@ const SeasonDetail = () => {
                         {episode.air_date ? moment(episode.air_date).format('DD MMM YYYY') : 'Air date TBA'}
                         {episode.vote_count ? ` · ${episode.vote_count} votes` : ''}
                       </p>
+
+                      <p className="mt-3 line-clamp-4 text-[0.84rem] leading-6 text-[#9ca1b7]">
+                        {episode.overview || 'No overview is available for this episode yet.'}
+                      </p>
                     </div>
 
-                    <p className="line-clamp-4 text-[0.84rem] leading-6 text-[#9ca1b7]">
-                      {episode.overview || 'No overview is available for this episode yet.'}
-                    </p>
+                    <button
+                      type="button"
+                      className={`action-pill w-full justify-center px-3 py-2 text-[0.78rem] sm:ml-4 sm:mt-0 sm:w-auto sm:flex-shrink-0 ${isEpisodeWatched(showId, seasonNumber, episode.episode_number) ? 'action-pill-active' : ''}`}
+                      onClick={() => {
+                        if (!user) {
+                          navigate(`/login?next=${encodeURIComponent(location.pathname)}`);
+                          return;
+                        }
+
+                        toggleEpisodeWatched({
+                          show: tv,
+                          episode,
+                          seasonNumber,
+                        });
+                      }}
+                      disabled={isActionPending(`episode:${showId}:${Number(seasonNumber)}:${Number(episode.episode_number)}`)}
+                    >
+                      {isActionPending(`episode:${showId}:${Number(seasonNumber)}:${Number(episode.episode_number)}`) ? (
+                        <RiLoader4Line className="animate-spin" size={14} />
+                      ) : isEpisodeWatched(showId, seasonNumber, episode.episode_number) ? (
+                        <RiCheckboxCircleFill size={14} />
+                      ) : (
+                        <RiCheckboxCircleLine size={14} />
+                      )}
+                      {isEpisodeWatched(showId, seasonNumber, episode.episode_number) ? 'Watched' : 'Mark watched'}
+                    </button>
                   </div>
                 </div>
               </div>

@@ -1,13 +1,35 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { RiArrowRightUpLine, RiStarSFill, RiTv2Line } from 'react-icons/ri';
+import { RiArrowRightUpLine, RiBookmark3Fill, RiBookmark3Line, RiLoader4Line, RiStarSFill, RiTv2Line } from 'react-icons/ri';
+import { useAuth } from '../context/auth/AuthContext';
+import { useLibrary } from '../context/library/LibraryContext';
 
 const TvItem = ({ tv }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { user } = useAuth();
+    const { isActionPending, isInWatchlist, toggleWatchlist } = useLibrary();
     const slug = tv.name
         .toLowerCase()
         .replace(/ /g, '-')
         .replace(/[^\w-]+/g, '');
+    const inWatchlist = isInWatchlist('tv', tv.id);
+    const watchlistPending = isActionPending(`watchlist:tv:${tv.id}`);
+    const originalLanguage = tv.original_language ? tv.original_language.toUpperCase() : '';
+    const yearLabel = tv.first_air_date ? moment(tv.first_air_date).format('YYYY') : 'Upcoming';
+
+    const handleWatchlistToggle = async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!user) {
+            navigate(`/login?next=${encodeURIComponent(`${location.pathname}${location.search}`)}`);
+            return;
+        }
+
+        await toggleWatchlist({ item: tv, mediaType: 'tv' });
+    };
 
     return (
         <Link to={`/tv/${tv.id}/${slug}`} className="group block">
@@ -30,6 +52,26 @@ const TvItem = ({ tv }) => {
                     <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/78 px-2.5 py-1.5 text-[0.58rem] font-medium uppercase tracking-[0.22em] text-white shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md">
                         Series
                     </div>
+                    <div className="absolute bottom-3 right-3">
+                        <button
+                            type="button"
+                            onClick={handleWatchlistToggle}
+                            className={`relative inline-grid h-9 w-9 place-items-center overflow-hidden rounded-full leading-none shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${inWatchlist ? 'bg-[linear-gradient(135deg,#ffe28a,var(--accent))] text-[#1b1c27] ring-[rgba(var(--accent-rgb),0.28)] shadow-[0_8px_18px_rgba(var(--accent-rgb),0.24)]' : 'bg-black/78 text-white ring-white/10 hover:bg-black/82'} ${watchlistPending ? 'cursor-wait' : ''}`}
+                            aria-label={`${inWatchlist ? 'Remove' : 'Add'} ${tv.name} ${inWatchlist ? 'from' : 'to'} watchlist`}
+                            title={`${inWatchlist ? 'Remove from' : 'Add to'} watchlist`}
+                            disabled={watchlistPending}
+                        >
+                            {watchlistPending ? (
+                                <span className="pointer-events-none absolute left-1/2 top-1/2 flex h-[15px] w-[15px] -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+                                    <RiLoader4Line className="block animate-spin" size={15} />
+                                </span>
+                            ) : inWatchlist ? (
+                                <RiBookmark3Fill size={15} />
+                            ) : (
+                                <RiBookmark3Line size={15} />
+                            )}
+                        </button>
+                    </div>
                     <div className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/78 px-2.5 py-1.5 text-[0.7rem] font-medium text-white shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md">
                         <RiStarSFill className="text-[var(--accent)]" size={13} />
                         {tv.vote_average != null ? Number(tv.vote_average).toFixed(1) : 'N/A'}
@@ -38,7 +80,8 @@ const TvItem = ({ tv }) => {
                     <div className="flex flex-1 flex-col justify-between px-3.5 py-3.5">
                         <div>
                             <p className="text-[0.62rem] uppercase tracking-[0.22em] text-[#7c8197]">
-                                {tv.first_air_date ? moment(tv.first_air_date).format('YYYY') : 'Upcoming'}
+                                {yearLabel}
+                                {originalLanguage ? ` · ${originalLanguage}` : ''}
                             </p>
                             <h3 className="mt-2.5 line-clamp-2 text-[1.2rem] leading-[1.08] text-[#e7e1d7] transition-colors duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:text-[var(--accent)]">
                                 {tv.name}

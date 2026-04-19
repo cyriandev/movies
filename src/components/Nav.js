@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { RiArrowRightUpLine, RiSearch2Line } from 'react-icons/ri';
 
@@ -13,6 +13,12 @@ const Nav = ({ onMenuClick, menuOpen }) => {
     const location = useLocation();
     const [q, setQ] = useState('');
     const [searchOpen, setSearchOpen] = useState(false);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const nextQuery = location.pathname.startsWith('/search') ? searchParams.get('q') || '' : '';
+        setQ(nextQuery);
+    }, [location.pathname, location.search]);
 
     const activeLabel = useMemo(() => {
         if (location.pathname.startsWith('/tv')) {
@@ -57,7 +63,7 @@ const Nav = ({ onMenuClick, menuOpen }) => {
                         </button>
 
                         <div className="hidden sm:block">
-                            <p className="text-[0.64rem] uppercase tracking-[0.28em] text-[#7f8da6]">moviesntv</p>
+                            <p className="text-[0.64rem] uppercase tracking-[0.28em] text-[var(--muted-warm)]">moviesntv</p>
                             <p className="mt-1 text-sm text-[#f4f7fb]">{activeLabel}</p>
                         </div>
                     </div>
@@ -79,13 +85,13 @@ const Nav = ({ onMenuClick, menuOpen }) => {
 
                     <form onSubmit={handleSubmit} className="hidden items-center gap-2 lg:flex">
                         <div className="input-shell flex items-center gap-3 px-4 py-3">
-                            <RiSearch2Line className="text-[#87a7d9]" size={18} />
+                            <RiSearch2Line className="text-[var(--text-warm)]" size={18} />
                             <input
                                 type="search"
                                 placeholder="Search movies, TV shows..."
                                 value={q}
                                 onChange={(e) => setQ(e.target.value)}
-                                className="w-72 bg-transparent text-sm text-[#f4f7fb] placeholder:text-[#6f809d] focus:outline-none"
+                                className="w-72 bg-transparent text-sm text-[#f4f7fb] placeholder:text-[var(--muted-warm-soft)] focus:outline-none"
                             />
                         </div>
 
@@ -111,14 +117,14 @@ const Nav = ({ onMenuClick, menuOpen }) => {
                         <div className="double-core px-4 py-4">
                             <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row">
                                 <div className="input-shell flex flex-1 items-center gap-3 px-4 py-3">
-                                    <RiSearch2Line className="text-[#87a7d9]" size={18} />
+                                    <RiSearch2Line className="text-[var(--text-warm)]" size={18} />
                                     <input
                                         type="search"
                                         placeholder="Search movies, TV shows..."
                                         value={q}
                                         onChange={(e) => setQ(e.target.value)}
                                         autoFocus
-                                        className="w-full bg-transparent text-sm text-[#f4f7fb] placeholder:text-[#6f809d] focus:outline-none"
+                                        className="w-full bg-transparent text-sm text-[#f4f7fb] placeholder:text-[var(--muted-warm-soft)] focus:outline-none"
                                     />
                                 </div>
                                 <button type="submit" className="island-button group w-full justify-center text-sm sm:w-auto">

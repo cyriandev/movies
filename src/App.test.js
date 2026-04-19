@@ -19,3 +19,13 @@ test('renders the main movie experience', async () => {
   expect(screen.getAllByPlaceholderText(/search titles/i)[0]).toBeInTheDocument();
   expect(screen.getByText(/most popular/i)).toBeInTheDocument();
 });
+
+test('redirects protected watchlist route to login', async () => {
+  window.history.pushState({}, '', '/watchlist');
+
+  render(<App />);
+
+  expect(
+    await screen.findByRole('heading', { name: /continue with email\./i })
+  ).toBeInTheDocument();
+});

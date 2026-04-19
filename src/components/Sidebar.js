@@ -2,18 +2,23 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
+    RiBookmark3Line,
     RiCloseLine,
     RiClapperboardLine,
     RiFilmLine,
+    RiLoginBoxLine,
     RiLoader4Line,
+    RiLogoutBoxLine,
     RiSearch2Line,
     RiStarSFill,
     RiTv2Line,
 } from 'react-icons/ri';
+import { useAuth } from '../context/auth/AuthContext';
 
 const navItems = [
-    { to: '/movies', label: 'Movies', subtitle: 'Feature films', icon: RiFilmLine, matches: ['/movies', '/movie/'] },
-    { to: '/tv', label: 'TV Shows', subtitle: 'Series and episodes', icon: RiTv2Line, matches: ['/tv', '/tv/'] },
+    { to: '/movies', label: 'Movies', icon: RiFilmLine, matches: ['/movies', '/movie/'] },
+    { to: '/tv', label: 'TV Shows', icon: RiTv2Line, matches: ['/tv', '/tv/'] },
+    { to: '/watchlist', label: 'Watchlist', icon: RiBookmark3Line, matches: ['/watchlist'] },
 ];
 
 const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
@@ -23,11 +28,21 @@ const createSlug = (value) => value.toLowerCase().replace(/ /g, '-').replace(/[^
 const Sidebar = ({ isOpen, onClose }) => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { authLoading, signOut, user } = useAuth();
     const [query, setQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const [suggestionsLoading, setSuggestionsLoading] = useState(false);
     const [suggestionsError, setSuggestionsError] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const nextQuery = location.pathname.startsWith('/search') ? searchParams.get('q') || '' : '';
+        setQuery(nextQuery);
+        setSuggestions([]);
+        setSuggestionsError('');
+        setShowSuggestions(false);
+    }, [location.pathname, location.search]);
 
     useEffect(() => {
         if (query.trim().length < 2) {
@@ -124,6 +139,17 @@ const Sidebar = ({ isOpen, onClose }) => {
         handleFullSearch();
     };
 
+    const handleAuthNavigation = (path) => {
+        navigate(path);
+        onClose();
+    };
+
+    const handleSignOut = async () => {
+        await signOut();
+        navigate('/movies');
+        onClose();
+    };
+
     const navLinkClassName = ({ isActive }) =>
         `sidebar-nav-item group ${isActive
             ? 'sidebar-nav-item-active'
@@ -164,7 +190,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 <form onSubmit={handleSubmit} className="mt-3" data-sidebar-search>
                     <div className="relative">
                         <div className="input-shell flex items-center gap-3 rounded-[0.95rem] bg-white/[0.04] px-3 py-2.5 backdrop-blur-md">
-                            <RiSearch2Line className="text-[#858ba1]" size={17} />
+                            <RiSearch2Line className="text-[var(--muted-warm)]" size={17} />
                             <input
                                 type="search"
                                 placeholder="Search titles"
@@ -226,7 +252,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                                                             {date ? ` · ${new Date(date).getFullYear()}` : ''}
                                                         </p>
                                                     </div>
-                                                    <div className="inline-flex items-center gap-1 text-[0.72rem] text-[#d9deea]">
+                                                    <div className="inline-flex items-center gap-1 text-[0.72rem] text-[#e7e1d7]">
                                                         <RiStarSFill className="text-[var(--accent)]" size={12} />
                                                         {item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}
                                                     </div>
@@ -273,7 +299,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                         >
                             {() => (
                                 <>
-                                    <div className={`flex h-[2.125rem] w-[2.125rem] items-center justify-center transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${isActive ? 'text-[var(--accent)]' : 'text-[#aeb4c7] group-hover:text-[#e7e1d7]'}`}>
+                                    <div className={`flex h-[2.125rem] w-[2.125rem] items-center justify-center transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${isActive ? 'text-[var(--accent)]' : 'text-[var(--muted-warm)] group-hover:text-[#e7e1d7]'}`}>
                                         <Icon size={17} />
                                     </div>
                                     <p className="min-w-0 flex-1 text-[0.95rem] text-inherit">{label}</p>
@@ -284,7 +310,37 @@ const Sidebar = ({ isOpen, onClose }) => {
                     </nav>
                 </div>
 
-                <div className="relative z-10 mt-auto pt-6" />
+                <div className="relative z-10 mt-auto space-y-3 pt-6">
+                    <div className="space-y-2">
+                        <p className="sidebar-section-label">Account</p>
+                        {authLoading ? (
+                            <div className="double-core px-3 py-3 text-sm text-[#9ca1b7]">Loading account...</div>
+                        ) : user ? (
+                            <div className="double-core rounded-[1rem] px-3.5 py-3.5">
+                                <p className="truncate text-sm text-[#f5f6fb]">{user.email || 'Signed in user'}</p>
+                                <button
+                                    type="button"
+                                    onClick={handleSignOut}
+                                    className="action-pill mt-3 w-full justify-center"
+                                >
+                                    <RiLogoutBoxLine size={16} />
+                                    Sign out
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => handleAuthNavigation('/login')}
+                                    className="action-pill flex-1 justify-center"
+                                >
+                                    <RiLoginBoxLine size={16} />
+                                    Continue with email
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
         </div>
     );
 

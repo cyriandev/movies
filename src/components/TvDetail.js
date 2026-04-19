@@ -1,16 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 import {
   RiArrowRightUpLine,
   RiArrowLeftLine,
+  RiBookmark3Fill,
+  RiBookmark3Line,
   RiCalendarLine,
+  RiCheckboxCircleFill,
   RiClapperboardLine,
   RiImageLine,
+  RiLoader4Line,
   RiStarSFill,
   RiTv2Line,
 } from 'react-icons/ri';
 import TvContext from '../context/tv/tvContext';
+import { useAuth } from '../context/auth/AuthContext';
+import { useLibrary } from '../context/library/LibraryContext';
 import Cast from './Cast';
 import Crew from './Crew';
 import Review from './Review';
@@ -38,6 +44,8 @@ const renderTabCount = (tab, reviews, videos, seasons) => {
 
 const TvDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const tvContext = useContext(TvContext);
   const {
     getTv, tv_loading, tv,
@@ -45,6 +53,14 @@ const TvDetail = () => {
     getReviews, reviews_loading, reviews,
     getVideos, videos_loading, videos,
   } = tvContext;
+  const { user } = useAuth();
+  const {
+    getShowProgress,
+    isActionPending,
+    isInWatchlist,
+    loadShowEpisodes,
+    toggleWatchlist,
+  } = useLibrary();
 
   const [activeTab, setActiveTab] = useState('Seasons');
 
@@ -57,6 +73,12 @@ const TvDetail = () => {
     window.scrollTo(0, 0);
     // eslint-disable-next-line
   }, [id]);
+
+  useEffect(() => {
+    if (user && tv?.id) {
+      loadShowEpisodes(tv.id);
+    }
+  }, [loadShowEpisodes, tv?.id, user]);
 
   if (tv_loading) {
     return (
@@ -76,6 +98,22 @@ const TvDetail = () => {
   const sortedVideos = sortVideosByPriority(videos);
   const featuredVideo = sortedVideos[0];
   const remainingVideos = sortedVideos.slice(1);
+  const showId = Number(tv.id || id);
+  const inWatchlist = isInWatchlist('tv', showId);
+  const watchlistPending = isActionPending(`watchlist:tv:${showId}`);
+  const showProgress = getShowProgress(showId, tv);
+  const watchedEpisodes = Number(showProgress.watched_episodes || 0);
+  const totalEpisodes = Number(tv.number_of_episodes || showProgress.total_episodes || 0);
+  const progressLabel = totalEpisodes > 0 ? `${watchedEpisodes}/${totalEpisodes} watched` : `${watchedEpisodes} watched`;
+
+  const handleWatchlistToggle = async () => {
+    if (!user) {
+      navigate(`/login?next=${encodeURIComponent(location.pathname)}`);
+      return;
+    }
+
+    await toggleWatchlist({ item: tv, mediaType: 'tv' });
+  };
 
   const metadata = [
     {
@@ -151,6 +189,27 @@ const TvDetail = () => {
                       <RiArrowLeftLine size={16} />
                       Back to series
                     </Link>
+
+                    <button
+                      type="button"
+                      onClick={handleWatchlistToggle}
+                      className={`action-pill ${inWatchlist ? 'action-pill-active' : ''}`}
+                      disabled={watchlistPending}
+                    >
+                      {watchlistPending ? (
+                        <RiLoader4Line className="animate-spin" size={16} />
+                      ) : inWatchlist ? (
+                        <RiBookmark3Fill size={16} />
+                      ) : (
+                        <RiBookmark3Line size={16} />
+                      )}
+                      {inWatchlist ? 'In watchlist' : 'Add to watchlist'}
+                    </button>
+
+                    <span className={`action-pill ${showProgress.completed ? 'action-pill-active' : ''}`}>
+                      <RiCheckboxCircleFill size={16} />
+                      {progressLabel}
+                    </span>
 
                   </div>
 

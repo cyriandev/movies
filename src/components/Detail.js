@@ -1,15 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 import {
-  RiArrowLeftLine,
-  RiCalendarLine,
-  RiClapperboardLine,
-  RiFilmLine,
-  RiStarSFill,
-  RiTimeLine,
+    RiArrowLeftLine,
+    RiBookmark3Fill,
+    RiBookmark3Line,
+    RiCalendarLine,
+    RiCheckboxCircleFill,
+    RiCheckboxCircleLine,
+    RiClapperboardLine,
+    RiFilmLine,
+    RiLoader4Line,
+    RiStarSFill,
+    RiTimeLine,
 } from 'react-icons/ri';
 import MoviesContext from '../context/movies/moviesContext';
+import { useAuth } from '../context/auth/AuthContext';
+import { useLibrary } from '../context/library/LibraryContext';
 import Cast from './Cast';
 import Crew from './Crew';
 import Review from './Review';
@@ -33,6 +40,8 @@ const renderTabCount = (tab, reviews, videos) => {
 
 export const Detail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const moviesContext = useContext(MoviesContext);
   const {
     getMovie, movie_loading, movie,
@@ -40,6 +49,15 @@ export const Detail = () => {
     getReviews, reviews_loading, reviews,
     getVideos, videos_loading, videos,
   } = moviesContext;
+  const { user } = useAuth();
+  const {
+    getItemStatus,
+    isActionPending,
+    isInWatchlist,
+    isMovieWatched,
+    setMovieWatched,
+    toggleWatchlist,
+  } = useLibrary();
 
   const [activeTab, setActiveTab] = useState('Videos');
 
@@ -95,6 +113,34 @@ export const Detail = () => {
   const sortedVideos = sortVideosByPriority(videos);
   const featuredVideo = sortedVideos[0];
   const remainingVideos = sortedVideos.slice(1);
+  const movieId = Number(movie.id || id);
+  const inWatchlist = isInWatchlist('movie', movieId);
+  const watchedMovie = isMovieWatched(movieId);
+  const movieStatus = getItemStatus('movie', movieId);
+  const watchlistPending = isActionPending(`watchlist:movie:${movieId}`);
+  const watchedPending = isActionPending(`movie:${movieId}`);
+
+  const requireAuth = () => {
+    navigate(`/login?next=${encodeURIComponent(location.pathname)}`);
+  };
+
+  const handleWatchlistToggle = async () => {
+    if (!user) {
+      requireAuth();
+      return;
+    }
+
+    await toggleWatchlist({ item: movie, mediaType: 'movie' });
+  };
+
+  const handleWatchedToggle = async () => {
+    if (!user) {
+      requireAuth();
+      return;
+    }
+
+    await setMovieWatched({ movie, watched: !watchedMovie });
+  };
 
   return (
     <div className="w-full space-y-6">
@@ -142,6 +188,38 @@ export const Detail = () => {
                       <RiArrowLeftLine size={16} />
                       Back to films
                     </Link>
+
+                    <button
+                      type="button"
+                      onClick={handleWatchlistToggle}
+                      className={`action-pill ${inWatchlist ? 'action-pill-active' : ''}`}
+                      disabled={watchlistPending}
+                    >
+                      {watchlistPending ? (
+                        <RiLoader4Line className="animate-spin" size={16} />
+                      ) : inWatchlist ? (
+                        <RiBookmark3Fill size={16} />
+                      ) : (
+                        <RiBookmark3Line size={16} />
+                      )}
+                      {inWatchlist ? 'In watchlist' : 'Add to watchlist'}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleWatchedToggle}
+                      className={`action-pill ${watchedMovie ? 'action-pill-active' : ''}`}
+                      disabled={watchedPending}
+                    >
+                      {watchedPending ? (
+                        <RiLoader4Line className="animate-spin" size={16} />
+                      ) : watchedMovie ? (
+                        <RiCheckboxCircleFill size={16} />
+                      ) : (
+                        <RiCheckboxCircleLine size={16} />
+                      )}
+                      {movieStatus === 'watched' ? 'Watched' : 'Mark watched'}
+                    </button>
 
                   </div>
 
