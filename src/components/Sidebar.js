@@ -161,12 +161,6 @@ const Sidebar = ({ isOpen, onClose }) => {
             location.pathname === match || location.pathname.startsWith(match)
         ));
 
-    const getBrowseDestination = (pathname) => (
-        (pathname === '/movies' || pathname === '/tv') && location.search
-            ? { pathname, search: location.search }
-            : pathname
-    );
-
     const content = (
         <div className="sidebar-panel flex h-full flex-col px-4 py-5">
                 <div className="relative z-10 flex items-center justify-between">
@@ -298,7 +292,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                         return (
                         <NavLink
                             key={to}
-                            to={getBrowseDestination(to)}
+                            to={to}
                             className={() => navLinkClassName({ isActive })}
                             onClick={onClose}
                             style={{ transitionDelay: `${100 + index * 70}ms` }}
