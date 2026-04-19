@@ -44,11 +44,13 @@ const SeasonDetail = () => {
       label: 'Season',
       value: season.name || `Season ${seasonNumber}`,
       icon: RiTv2Line,
+      compact: true,
     },
     {
       label: 'First aired',
       value: season.air_date ? moment(season.air_date).format('DD MMM YYYY') : 'TBA',
       icon: RiCalendarLine,
+      compact: true,
     },
     {
       label: 'Episodes',
@@ -59,6 +61,7 @@ const SeasonDetail = () => {
       label: 'Rating',
       value: season.vote_average ? season.vote_average.toFixed(1) : 'N/A',
       icon: RiStarSFill,
+      accent: true,
     },
   ];
 
@@ -106,7 +109,7 @@ const SeasonDetail = () => {
                   <div className="flex flex-wrap items-center gap-2.5">
                     <Link
                       to={`/tv/${id}/${showSlug}`}
-                      className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full bg-[#242526] px-3.5 py-2 text-[0.68rem] uppercase tracking-[0.2em] text-[#f5f6fb] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:bg-[#2b2c2d]"
+                      className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full bg-black/78 px-3.5 py-2 text-[0.68rem] uppercase tracking-[0.2em] text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:bg-black/82"
                     >
                       <RiArrowLeftLine size={16} />
                       Back to series
@@ -129,14 +132,16 @@ const SeasonDetail = () => {
 
       <Reveal delay={80}>
         <div className="grid gap-2.5 lg:grid-cols-4">
-          {metadata.map(({ label, value, icon: Icon }) => (
-            <div key={label} className="double-shell">
-              <div className="double-core h-full px-3.5 py-3.5">
-                <div className="flex items-center gap-2.5 text-[var(--accent)]">
-                  <Icon size={16} />
-                  <p className="text-[0.62rem] uppercase tracking-[0.22em] text-[#7c8197]">{label}</p>
-                </div>
-                <p className="mt-3 text-[1.2rem] leading-tight text-[#f5f6fb]">{value}</p>
+          {metadata.map(({ label, value, icon: Icon, accent, compact }) => (
+              <div key={label} className="double-shell">
+                <div className="double-core stat-card h-full px-3.5 py-3.5">
+                  <div className="stat-card-head">
+                    <span className="stat-card-icon">
+                      <Icon size={14} />
+                    </span>
+                    <p className="stat-card-label">{label}</p>
+                  </div>
+                <p className={`stat-card-value ${accent ? 'stat-card-value-accent' : ''} ${compact ? 'stat-card-value-compact' : ''}`}>{value}</p>
               </div>
             </div>
           ))}

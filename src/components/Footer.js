@@ -7,12 +7,8 @@ const Footer = () => (
                 <div className="double-core px-4 py-4 sm:px-5">
                     <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div className="min-w-0">
-                            <span className="luxury-badge">
-                                <span className="eyebrow-dot" />
-                                About the app
-                            </span>
-                            <p className="mt-2 max-w-lg text-[0.82rem] leading-6 text-[#9ca1b7]">
-                                moviesntv is a TMDB-powered viewing guide styled as a dark dashboard with warm gold accents.
+                            <p className="text-[0.72rem] uppercase tracking-[0.2em] text-[#8f95ab]">
+                                &copy; moviesntv
                             </p>
                         </div>
 

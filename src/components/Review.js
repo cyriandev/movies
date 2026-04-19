@@ -50,10 +50,10 @@ const Review = ({ item }) => {
                 {item.content.length > 200 && (
                     <button
                         onClick={() => setExpanded(!expanded)}
-                        className="mt-4 inline-flex items-center gap-2.5 rounded-full bg-[#242526] px-3 py-1.5 text-[0.68rem] uppercase tracking-[0.2em] text-[#e7e1d7] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:bg-[#2b2c2d]"
+                        className="mt-4 inline-flex items-center gap-2.5 rounded-full bg-[rgba(36,37,38,0.42)] px-3 py-1.5 text-[0.68rem] uppercase tracking-[0.2em] text-[#e7e1d7] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-[18px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:bg-[rgba(36,37,38,0.5)]"
                     >
                         {expanded ? 'Show less' : 'Read more'}
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.08]">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.08] ring-1 ring-white/10">
                             <RiArrowRightUpLine size={14} />
                         </span>
                     </button>

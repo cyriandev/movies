@@ -21,7 +21,7 @@ const Filters = ({
 
     return (
         <div className="space-y-3">
-            <div className="floating-surface px-4 py-3.5 sm:px-5">
+            <div className="floating-surface px-4 py-2 sm:px-5">
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-wrap items-center justify-between gap-2.5">
                         <div className="flex flex-wrap items-center gap-2">
@@ -39,7 +39,7 @@ const Filters = ({
                                 type="button"
                                 onClick={() => setIsOpen((open) => !open)}
                                 aria-expanded={isOpen}
-                                className="inline-flex items-center gap-2 rounded-[0.72rem] bg-[#2b2c2d] px-3 py-2 text-[0.64rem] uppercase tracking-[0.16em] text-[#e7e1d7] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[#313234]"
+                                className="tab-pill inline-flex items-center gap-2"
                             >
                                 {isOpen ? 'Hide filters' : 'Show filters'}
                                 <RiArrowDownSLine
@@ -83,9 +83,9 @@ const Filters = ({
                                         <button
                                             key={genre.id}
                                             onClick={() => onGenreToggle(genre.id)}
-                                            className={`rounded-[0.72rem] px-2.5 py-1.5 text-[0.64rem] uppercase tracking-[0.16em] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${selectedGenres.includes(genre.id)
-                                                ? 'bg-[rgba(255,204,53,0.14)] text-[#e7e1d7]'
-                                                : 'bg-[#2b2c2d] text-[#8f897f] hover:bg-[#313234] hover:text-[#e7e1d7]'
+                                            className={`tab-pill ${selectedGenres.includes(genre.id)
+                                                ? 'tab-pill-active'
+                                                : ''
                                                 }`}
                                         >
                                             {genre.name}

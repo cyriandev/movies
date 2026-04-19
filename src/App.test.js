@@ -14,7 +14,7 @@ jest.mock('axios', () => ({
 test('renders the main movie experience', async () => {
   render(<App />);
 
-  await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(4));
+  await waitFor(() => expect(axios.get).toHaveBeenCalledTimes(3));
 
   expect(screen.getAllByPlaceholderText(/search titles/i)[0]).toBeInTheDocument();
   expect(screen.getByText(/most popular/i)).toBeInTheDocument();

@@ -37,8 +37,12 @@ const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
 const TvState = ({ children }) => {
     const initialState = {
         top_rated: [],
+        top_rated_page: 1,
+        top_rated_total_pages: 1,
         reviews: [],
         popular: [],
+        popular_page: 1,
+        popular_total_pages: 1,
         videos: [],
         onAir: [],
         credits: [],
@@ -79,14 +83,23 @@ const TvState = ({ children }) => {
     }
 
     // Get Top Rated Tv
-    const getTopRated = async () => {
+    const getTopRated = async (page = 1) => {
 
         setTopRatedLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/tv/top_rated?api_key=${API_KEY}`);
+            const res = await axios.get('https://api.themoviedb.org/3/tv/top_rated', {
+                params: {
+                    api_key: API_KEY,
+                    page,
+                },
+            });
             dispatch({
                 type: GET_TOP_RATED,
-                payload: res.data.results
+                payload: {
+                    results: res.data.results,
+                    page: res.data.page || page,
+                    total_pages: Math.max(1, Math.min(res.data.total_pages || 1, 500)),
+                }
             })
         } catch (err) {
             dispatch({
@@ -98,14 +111,23 @@ const TvState = ({ children }) => {
     }
 
     // Get Popular Tv
-    const getPopular = async () => {
+    const getPopular = async (page = 1) => {
 
         setPopularLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}`);
+            const res = await axios.get('https://api.themoviedb.org/3/tv/popular', {
+                params: {
+                    api_key: API_KEY,
+                    page,
+                },
+            });
             dispatch({
                 type: GET_POPULAR,
-                payload: res.data.results
+                payload: {
+                    results: res.data.results,
+                    page: res.data.page || page,
+                    total_pages: Math.max(1, Math.min(res.data.total_pages || 1, 500)),
+                }
             })
         } catch (err) {
             dispatch({
@@ -244,8 +266,12 @@ const TvState = ({ children }) => {
             onAir: state.onAir,
             onAir_loading: state.onAir_loading,
             top_rated: state.top_rated,
+            top_rated_page: state.top_rated_page,
+            top_rated_total_pages: state.top_rated_total_pages,
             top_rated_loading: state.top_rated_loading,
             popular: state.popular,
+            popular_page: state.popular_page,
+            popular_total_pages: state.popular_total_pages,
             popular_loading: state.popular_loading,
             tv: state.tv,
             tv_loading: state.tv_loading,

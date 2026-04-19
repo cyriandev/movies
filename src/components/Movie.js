@@ -49,7 +49,7 @@ export const Movie = ({ movie }) => {
 
             <div className="mt-4 flex items-center justify-between text-sm text-[#9ca1b7]">
               <span>{movie.release_date ? moment(movie.release_date).format('DD MMM YYYY') : 'Release TBA'}</span>
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/[0.06] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px]">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(36,37,38,0.42)] text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-[18px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px] group-hover:bg-[rgba(36,37,38,0.5)]">
                 <RiArrowRightUpLine size={16} />
               </span>
             </div>

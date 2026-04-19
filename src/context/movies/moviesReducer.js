@@ -106,13 +106,17 @@ const moviesReducer = (state, action) => {
         case GET_POPULAR:
             return {
                 ...state,
-                popular: action.payload,
+                popular: action.payload.results,
+                popular_page: action.payload.page,
+                popular_total_pages: action.payload.total_pages,
                 popular_loading: false
             }
         case GET_TOP_RATED:
             return {
                 ...state,
-                top_rated: action.payload,
+                top_rated: action.payload.results,
+                top_rated_page: action.payload.page,
+                top_rated_total_pages: action.payload.total_pages,
                 top_rated_loading: false
             }
         case GET_REVIEWS:

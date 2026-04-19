@@ -37,7 +37,11 @@ const MoviesState = ({ children }) => {
     const initialState = {
         playing: [],
         top_rated: [],
+        top_rated_page: 1,
+        top_rated_total_pages: 1,
         popular: [],
+        popular_page: 1,
+        popular_total_pages: 1,
         movie: [],
         credits: [],
         reviews: [],
@@ -79,14 +83,23 @@ const MoviesState = ({ children }) => {
 
 
     // Get Top Rated Movies
-    const getTopRated = async () => {
+    const getTopRated = async (page = 1) => {
 
         setTopRatedLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
+            const res = await axios.get('https://api.themoviedb.org/3/movie/top_rated', {
+                params: {
+                    api_key: process.env.REACT_APP_TMDB_API_KEY,
+                    page,
+                },
+            });
             dispatch({
                 type: GET_TOP_RATED,
-                payload: res.data.results
+                payload: {
+                    results: res.data.results,
+                    page: res.data.page || page,
+                    total_pages: Math.max(1, Math.min(res.data.total_pages || 1, 500)),
+                }
             })
         } catch (err) {
             dispatch({
@@ -98,14 +111,23 @@ const MoviesState = ({ children }) => {
     }
 
     // Get Top Rated Movies
-    const getPopular = async () => {
+    const getPopular = async (page = 1) => {
 
         setPopularLoading();
         try {
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
+            const res = await axios.get('https://api.themoviedb.org/3/movie/popular', {
+                params: {
+                    api_key: process.env.REACT_APP_TMDB_API_KEY,
+                    page,
+                },
+            });
             dispatch({
                 type: GET_POPULAR,
-                payload: res.data.results
+                payload: {
+                    results: res.data.results,
+                    page: res.data.page || page,
+                    total_pages: Math.max(1, Math.min(res.data.total_pages || 1, 500)),
+                }
             })
         } catch (err) {
             dispatch({
@@ -248,7 +270,11 @@ const MoviesState = ({ children }) => {
             credits: state.credits,
             videos: state.videos,
             top_rated: state.top_rated,
+            top_rated_page: state.top_rated_page,
+            top_rated_total_pages: state.top_rated_total_pages,
             popular: state.popular,
+            popular_page: state.popular_page,
+            popular_total_pages: state.popular_total_pages,
             reviews: state.reviews,
             results: state.results,
             genres: state.genres,
@@ -278,4 +304,3 @@ const MoviesState = ({ children }) => {
 }
 
 export default MoviesState;
-

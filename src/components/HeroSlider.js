@@ -55,13 +55,13 @@ const HeroSlider = ({ items, type = 'movie' }) => {
                                 {title}
                             </h1>
                             <div className="mt-4 flex flex-wrap items-center gap-2.5 text-[0.68rem] uppercase tracking-[0.2em] text-[#8f94aa]">
-                                <span className="rounded-full bg-[#242526] px-3 py-1.5 text-[#f5f6fb]">
+                                <span className="rounded-full bg-black/78 px-3 py-1.5 text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md">
                                     {moment(date).format('MMMM YYYY')}
                                 </span>
-                                <span className="rounded-full bg-[#242526] px-3 py-1.5 text-[#f5f6fb]">
+                                <span className="rounded-full bg-black/78 px-3 py-1.5 text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md">
                                     {type === 'movie' ? 'Feature film' : 'Series'}
                                 </span>
-                                <span className="inline-flex items-center gap-2 rounded-full bg-[#242526] px-3 py-1.5 text-[#f5f6fb]">
+                                <span className="inline-flex items-center gap-2 rounded-full bg-black/78 px-3 py-1.5 text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md">
                                     <RiStarSFill className="text-[var(--accent)]" />
                                     {item.vote_average != null ? Number(item.vote_average).toFixed(1) : 'N/A'}
                                 </span>
@@ -82,37 +82,18 @@ const HeroSlider = ({ items, type = 'movie' }) => {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => setCurrent((c) => (c - 1 + slides.length) % slides.length)}
-                                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[#242526] text-[#f5f6fb] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:bg-[#2b2c2d]"
+                                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(36,37,38,0.42)] text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-[18px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:bg-[rgba(36,37,38,0.5)]"
                                 >
                                     <RiArrowLeftSLine size={19} />
                                 </button>
                                 <button
                                     onClick={() => setCurrent((c) => (c + 1) % slides.length)}
-                                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[#242526] text-[#f5f6fb] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:bg-[#2b2c2d]"
+                                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(36,37,38,0.42)] text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-[18px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:bg-[rgba(36,37,38,0.5)]"
                                 >
                                     <RiArrowRightSLine size={19} />
                                 </button>
                             </div>
 
-                            <div className="flex flex-wrap items-center gap-2">
-                                {slides.map((slide, i) => {
-                                    const slideTitle = type === 'movie' ? slide.title : slide.name;
-
-                                    return (
-                                        <button
-                                            key={slide.id}
-                                            onClick={() => setCurrent(i)}
-                                            className={`rounded-[0.72rem] px-2.5 py-1.5 text-[0.68rem] uppercase tracking-[0.18em] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${i === current
-                                                ? 'border border-[rgba(255,204,53,0.22)] bg-[rgba(255,204,53,0.1)] text-[#ffcc35]'
-                                                : 'border border-transparent bg-[#242526] text-[#8f94aa] hover:bg-[#2b2c2d] hover:text-[#f5f6fb]'
-                                                }`}
-                                            aria-label={`Show ${slideTitle}`}
-                                        >
-                                            {i + 1}
-                                        </button>
-                                    );
-                                })}
-                            </div>
                         </div>
                     </div>
                 </div>

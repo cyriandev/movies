@@ -1,34 +1,101 @@
-import React, { useContext, useEffect, useState, useMemo } from 'react';
+import React, { useContext, useEffect, useState, useMemo, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import TvContext from '../context/tv/tvContext';
 import TvItem from './TvItem';
 import HeroSlider from './HeroSlider';
 import Filters from './Filters';
+import PaginationControls from './PaginationControls';
 import Reveal from './Reveal';
 import Seo from './Seo';
 
+const getInitialTab = (searchParams) => (
+    searchParams.get('tab') === 'top_rated' ? 'top_rated' : 'popular'
+);
+
+const getInitialPage = (searchParams) => {
+    const value = Number(searchParams.get('page'));
+
+    if (!Number.isInteger(value) || value < 1) {
+        return 1;
+    }
+
+    return Math.min(value, 500);
+};
+
 const Tv = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
     const tvContext = useContext(TvContext);
     const {
         getOnAir, onAir_loading, onAir,
-        getTopRated, top_rated_loading, top_rated,
-        getPopular, popular_loading, popular,
+        getTopRated, top_rated_loading, top_rated, top_rated_page, top_rated_total_pages,
+        getPopular, popular_loading, popular, popular_page, popular_total_pages,
         getTvGenres, tvGenres,
     } = tvContext;
 
-    const [activeTab, setActiveTab] = useState('popular');
+    const initialTab = getInitialTab(searchParams);
+    const initialPage = getInitialPage(searchParams);
+
+    const [activeTab, setActiveTab] = useState(initialTab);
     const [selectedGenres, setSelectedGenres] = useState([]);
     const [sortBy, setSortBy] = useState('default');
+    const fetchedPagesRef = useRef({
+        popular: new Set(),
+        top_rated: new Set(),
+    });
+    const [pageByTab, setPageByTab] = useState(() => ({
+        popular: initialTab === 'popular' ? initialPage : 1,
+        top_rated: initialTab === 'top_rated' ? initialPage : 1,
+    }));
 
     useEffect(() => {
         getOnAir();
-        getTopRated();
-        getPopular();
         getTvGenres();
         // eslint-disable-next-line
     }, []);
 
+    useEffect(() => {
+        if (popular.length > 0 && popular_page > 0) {
+            fetchedPagesRef.current.popular.add(popular_page);
+        }
+
+        if (top_rated.length > 0 && top_rated_page > 0) {
+            fetchedPagesRef.current.top_rated.add(top_rated_page);
+        }
+    }, [popular, popular_page, top_rated, top_rated_page]);
+
+    useEffect(() => {
+        const nextPage = pageByTab[activeTab];
+        const fetchedPages = fetchedPagesRef.current[activeTab];
+
+        if (fetchedPages.has(nextPage)) {
+            return;
+        }
+
+        fetchedPages.add(nextPage);
+
+        if (activeTab === 'popular') {
+            getPopular(nextPage);
+            return;
+        }
+
+        getTopRated(nextPage);
+    }, [activeTab, getPopular, getTopRated, pageByTab]);
+
     const sourceData = activeTab === 'popular' ? popular : top_rated;
     const loading = activeTab === 'popular' ? popular_loading : top_rated_loading;
+    const currentPage = activeTab === 'popular' ? pageByTab.popular : pageByTab.top_rated;
+    const totalPages = activeTab === 'popular' ? popular_total_pages : top_rated_total_pages;
+
+    useEffect(() => {
+        if (searchParams.get('tab') === activeTab && searchParams.get('page') === String(currentPage)) {
+            return;
+        }
+
+        const nextParams = new URLSearchParams();
+        nextParams.set('tab', activeTab);
+        nextParams.set('page', String(currentPage));
+        setSearchParams(nextParams, { replace: true });
+    }, [activeTab, currentPage, searchParams, setSearchParams]);
 
     const filteredShows = useMemo(() => {
         let data = [...sourceData];
@@ -53,6 +120,17 @@ const Tv = () => {
         );
     };
 
+    const handlePageChange = (nextPage) => {
+        if (nextPage < 1 || nextPage > totalPages) {
+            return;
+        }
+
+        setPageByTab((prev) => ({
+            ...prev,
+            [activeTab]: nextPage,
+        }));
+    };
+
     return (
         <div className="w-full space-y-8">
             <Seo
@@ -72,7 +150,7 @@ const Tv = () => {
 
             <Reveal delay={60}>
                 <div className="double-shell">
-                    <div className="double-core px-4 py-4 sm:px-5 sm:py-5">
+                    <div className="double-core px-4 py-2 sm:px-5 sm:py-2.5">
                         <Filters
                             genres={tvGenres}
                             selectedGenres={selectedGenres}
@@ -117,11 +195,19 @@ const Tv = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-                        {filteredShows.map((tv) => (
-                            <TvItem key={tv.id} tv={tv} />
-                        ))}
-                    </div>
+                    <>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                            {filteredShows.map((tv) => (
+                                <TvItem key={tv.id} tv={tv} />
+                            ))}
+                        </div>
+                        <PaginationControls
+                            label={activeTab === 'popular' ? 'Popular series' : 'Top rated series'}
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                    </>
                 )}
             </Reveal>
         </div>

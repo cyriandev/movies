@@ -125,9 +125,9 @@ const Sidebar = ({ isOpen, onClose }) => {
     };
 
     const navLinkClassName = ({ isActive }) =>
-        `group relative flex items-center gap-3 rounded-[0.9rem] px-3 py-3 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${isActive
-            ? 'bg-[rgba(255,204,53,0.12)] text-[#f5f6fb]'
-            : 'text-[#989188] hover:bg-[#2b2c2d] hover:text-[#e7e1d7]'
+        `sidebar-nav-item group ${isActive
+            ? 'sidebar-nav-item-active'
+            : ''
         }`;
 
     const isNavItemActive = (matches) =>
@@ -136,29 +136,34 @@ const Sidebar = ({ isOpen, onClose }) => {
         ));
 
     const content = (
-        <div className="flex h-full flex-col bg-[#242526] px-4 py-4">
-                <div className="flex items-start justify-between">
+        <div className="sidebar-panel flex h-full flex-col px-4 py-5">
+                <div className="relative z-10 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-[0.75rem] bg-[linear-gradient(135deg,#ffe28a,#ffcc35)] text-[#1b1c27] shadow-[0_10px_22px_rgba(255,204,53,0.18)]">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-[0.95rem] border border-white/10 bg-[linear-gradient(135deg,#ffe28a,#ffcc35)] text-[#1b1c27]">
                             <RiClapperboardLine size={18} />
                         </div>
-                        <div className="min-w-0">
-                            <p className="text-[0.62rem] uppercase tracking-[0.22em] text-[#7f869b]">movies + series</p>
-                            <h1 className="mt-1 text-[1.22rem] leading-none text-[#f5f6fb]">moviesntv</h1>
-                        </div>
+                        <h1 className="min-w-0 text-[1.22rem] leading-none text-[#f5f6fb]">moviesntv</h1>
                     </div>
 
                     <button
                         onClick={onClose}
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2b2c2d] text-[#e7e1d7] lg:hidden"
+                        className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[#e7e1d7] backdrop-blur-md lg:hidden"
                     >
                         <RiCloseLine size={20} />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="mt-5" data-sidebar-search>
+                <div className="relative z-30 mt-5 rounded-[1.1rem] border border-white/[0.08] bg-white/[0.035] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                    <div className="flex items-center justify-between gap-3">
+                        <p className="sidebar-section-label">Quick search</p>
+                    </div>
+                    <p className="mt-2 text-[0.78rem] leading-5 text-[#f5f6fb]">
+                        Jump into films and series without leaving the dock.
+                    </p>
+
+                <form onSubmit={handleSubmit} className="mt-3" data-sidebar-search>
                     <div className="relative">
-                        <div className="input-shell flex items-center gap-3 rounded-[0.85rem] px-3 py-2.5">
+                        <div className="input-shell flex items-center gap-3 rounded-[0.95rem] bg-white/[0.04] px-3 py-2.5 backdrop-blur-md">
                             <RiSearch2Line className="text-[#858ba1]" size={17} />
                             <input
                                 type="search"
@@ -181,9 +186,9 @@ const Sidebar = ({ isOpen, onClose }) => {
                         </div>
 
                         {showSuggestions && query.trim().length >= 2 && (
-                            <div className="absolute inset-x-0 top-[calc(100%+0.45rem)] z-20 overflow-hidden rounded-[0.85rem] bg-[#242526] shadow-[0_16px_36px_rgba(0,0,0,0.24)] ring-1 ring-white/[0.04]">
+                            <div className="sidebar-search-panel absolute inset-x-0 top-[calc(100%+0.55rem)] z-40 overflow-hidden rounded-[0.95rem]">
                                 {suggestionsError ? (
-                                    <div className="px-3 py-3 text-[0.68rem] uppercase tracking-[0.18em] text-[#7f8499]">
+                                    <div className="px-3 py-3 text-[0.68rem] uppercase tracking-[0.18em] text-[#f5f6fb]">
                                         {suggestionsError}
                                     </div>
                                 ) : suggestions.length > 0 ? (
@@ -198,9 +203,9 @@ const Sidebar = ({ isOpen, onClose }) => {
                                                     type="button"
                                                     onMouseDown={(e) => e.preventDefault()}
                                                     onClick={() => handleSuggestionSelect(item)}
-                                                    className="flex w-full items-center gap-3 rounded-[0.75rem] px-2.5 py-2 text-left transition-colors duration-300 hover:bg-[#2b2c2d]"
+                                                    className="flex w-full items-center gap-3 rounded-[0.8rem] px-2.5 py-2 text-left transition-colors duration-300 hover:bg-white/[0.05]"
                                                 >
-                                                    <div className="h-11 w-11 flex-shrink-0 overflow-hidden rounded-[0.75rem] bg-[#2b2c2d]">
+                                                    <div className="h-11 w-11 flex-shrink-0 overflow-hidden rounded-[0.75rem] bg-white/[0.05]">
                                                         {item.poster_path ? (
                                                             <img
                                                                 src={`https://image.tmdb.org/t/p/w154/${item.poster_path}`}
@@ -216,7 +221,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                                                     </div>
                                                     <div className="min-w-0 flex-1">
                                                         <p className="truncate text-[0.95rem] text-[#f5f6fb]">{title}</p>
-                                                        <p className="mt-0.5 text-[0.66rem] uppercase tracking-[0.16em] text-[#7f8499]">
+                                                        <p className="mt-0.5 text-[0.66rem] uppercase tracking-[0.16em] text-[#f5f6fb]">
                                                             {item.media_type === 'movie' ? 'Movie' : 'Series'}
                                                             {date ? ` · ${new Date(date).getFullYear()}` : ''}
                                                         </p>
@@ -232,14 +237,14 @@ const Sidebar = ({ isOpen, onClose }) => {
                                             type="button"
                                             onMouseDown={(e) => e.preventDefault()}
                                             onClick={handleFullSearch}
-                                            className="mt-2 flex w-full items-center justify-between rounded-[0.75rem] border-t border-white/[0.04] px-2.5 pt-3 pb-1.5 text-left text-[0.68rem] uppercase tracking-[0.18em] text-[#9ca1b7] transition-colors duration-300 hover:text-[#e7e1d7]"
+                                            className="mt-2 flex w-full items-center justify-between rounded-[0.75rem] border-t border-white/[0.04] px-2.5 pt-3 pb-1.5 text-left text-[0.68rem] uppercase tracking-[0.18em] text-[#f5f6fb] transition-colors duration-300 hover:text-[#e7e1d7]"
                                         >
                                             View full search results
                                             <RiSearch2Line size={14} />
                                         </button>
                                     </div>
                                 ) : !suggestionsLoading ? (
-                                    <div className="px-3 py-3 text-[0.68rem] uppercase tracking-[0.18em] text-[#7f8499]">
+                                    <div className="px-3 py-3 text-[0.68rem] uppercase tracking-[0.18em] text-[#f5f6fb]">
                                         No matches
                                     </div>
                                 ) : null}
@@ -247,10 +252,15 @@ const Sidebar = ({ isOpen, onClose }) => {
                         )}
                     </div>
                 </form>
+                </div>
 
-                <div className="mt-6">
+                <div className="relative mt-6">
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                        <p className="sidebar-section-label">Navigation</p>
+                        <span className="h-px flex-1 bg-white/[0.06]" />
+                    </div>
                     <nav className="space-y-2">
-                    {navItems.map(({ to, label, subtitle, icon: Icon, matches }, index) => {
+                    {navItems.map(({ to, label, icon: Icon, matches }, index) => {
                         const isActive = isNavItemActive(matches);
 
                         return (
@@ -263,13 +273,10 @@ const Sidebar = ({ isOpen, onClose }) => {
                         >
                             {() => (
                                 <>
-                                    <div className={`flex h-10 w-10 items-center justify-center rounded-[0.8rem] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${isActive ? 'bg-[linear-gradient(135deg,#ffe28a,#ffcc35)] text-[#1b1c27]' : 'bg-white/[0.05] text-[#d8dde9] group-hover:bg-[#313234]'}`}>
-                                        <Icon size={18} />
+                                    <div className={`flex h-[2.125rem] w-[2.125rem] items-center justify-center transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${isActive ? 'text-[var(--accent)]' : 'text-[#aeb4c7] group-hover:text-[#e7e1d7]'}`}>
+                                        <Icon size={17} />
                                     </div>
-                                    <div className="min-w-0 flex-1">
-                                        <p className="text-sm text-inherit">{label}</p>
-                                        <p className={`mt-1 text-xs transition-colors duration-500 ${isActive ? 'text-[#c9dbf2]' : 'text-[#777f95]'}`}>{subtitle}</p>
-                                    </div>
+                                    <p className="min-w-0 flex-1 text-[0.95rem] text-inherit">{label}</p>
                                 </>
                             )}
                         </NavLink>
@@ -277,11 +284,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                     </nav>
                 </div>
 
-                <div className="mt-auto pt-6">
-                    <p className="text-[0.62rem] uppercase tracking-[0.18em] text-[#6f7489]">
-                        moviesntv · TMDB data
-                    </p>
-                </div>
+                <div className="relative z-10 mt-auto pt-6" />
         </div>
     );
 

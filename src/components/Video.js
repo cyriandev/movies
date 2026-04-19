@@ -46,7 +46,7 @@ const Video = ({ video, featured = false }) => {
                             </div>
                             <button
                                 onClick={() => setOpen(false)}
-                                className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2b2c2d] text-[#e7e1d7]"
+                                className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(36,37,38,0.42)] text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-[18px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[rgba(36,37,38,0.5)]"
                             >
                                 <RiCloseLine size={20} />
                             </button>
@@ -85,7 +85,7 @@ const Video = ({ video, featured = false }) => {
                         />
                         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,8,7,0.16)_0%,rgba(10,8,7,0.32)_100%)]" />
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <div className={`flex items-center justify-center rounded-full bg-[#2b2c2d]/90 text-[#e7e1d7] ${featured ? 'h-10 w-10' : 'h-7 w-7'}`}>
+                            <div className={`flex items-center justify-center rounded-full bg-black/78 text-[#e7e1d7] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md ${featured ? 'h-10 w-10' : 'h-7 w-7'}`}>
                                 <RiPlayMiniFill size={featured ? 20 : 16} />
                             </div>
                         </div>
@@ -100,7 +100,7 @@ const Video = ({ video, featured = false }) => {
                             {video.official ? ' · Official' : ''}
                         </p>
                     </div>
-                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#2b2c2d] text-[#e7e1d7] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px]">
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[rgba(36,37,38,0.42)] text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-[18px] transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-[1px] group-hover:bg-[rgba(36,37,38,0.5)]">
                         <RiArrowRightUpLine size={16} />
                     </span>
                 </div>
