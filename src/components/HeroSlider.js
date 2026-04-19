@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import { RiArrowLeftSLine, RiArrowRightSLine, RiArrowRightUpLine, RiStarSFill } from 'react-icons/ri';
 import Reveal from './Reveal';
 
 const HeroSlider = ({ items, type = 'movie' }) => {
     const [current, setCurrent] = useState(0);
+    const location = useLocation();
 
     const slides = items.slice(0, 5);
 
@@ -24,7 +25,11 @@ const HeroSlider = ({ items, type = 'movie' }) => {
     const date = type === 'movie' ? item.release_date : item.first_air_date;
     const originalLanguage = item.original_language ? item.original_language.toUpperCase() : '';
     const slug = title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-    const link = type === 'movie' ? `/movies/${item.id}/${slug}` : `/tv/${item.id}/${slug}`;
+    const pathname = type === 'movie' ? `/movies/${item.id}/${slug}` : `/tv/${item.id}/${slug}`;
+    const link =
+        (location.pathname === '/movies' || location.pathname === '/tv') && location.search
+            ? { pathname, search: location.search }
+            : pathname;
 
     return (
         <Reveal className="w-full">

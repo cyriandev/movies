@@ -163,7 +163,14 @@ const WatchlistPage = () => {
                       })()}
                     </p>
                   )}
-                  <h2 className="mt-1.5 truncate text-[1.15rem] text-[#f5f6fb]">{item.title}</h2>
+                  <h2 className="mt-1.5 truncate text-[1.15rem] text-[#f5f6fb]">
+                    <Link
+                      to={getMediaRoute(item.media_type, item.tmdb_id, item.title)}
+                      className="transition-colors duration-300 hover:text-[var(--accent)] focus:outline-none focus-visible:text-[var(--accent)]"
+                    >
+                      {item.title}
+                    </Link>
+                  </h2>
                   {item.media_type === 'tv' && (() => {
                     const progress = getShowProgress(item.tmdb_id, item);
                     const watchedEpisodes = Number(progress.watched_episodes || 0);

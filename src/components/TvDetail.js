@@ -105,6 +105,7 @@ const TvDetail = () => {
   const watchedEpisodes = Number(showProgress.watched_episodes || 0);
   const totalEpisodes = Number(tv.number_of_episodes || showProgress.total_episodes || 0);
   const progressLabel = totalEpisodes > 0 ? `${watchedEpisodes}/${totalEpisodes} watched` : `${watchedEpisodes} watched`;
+  const backToSeries = location.search ? { pathname: '/tv', search: location.search } : '/tv';
 
   const handleWatchlistToggle = async () => {
     if (!user) {
@@ -183,7 +184,7 @@ const TvDetail = () => {
                 <div>
                   <div className="flex flex-wrap items-center gap-2.5">
                     <Link
-                      to="/tv"
+                      to={backToSeries}
                       className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full bg-black/78 px-3.5 py-2 text-[0.68rem] uppercase tracking-[0.2em] text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:bg-black/82"
                     >
                       <RiArrowLeftLine size={16} />
@@ -354,7 +355,10 @@ const TvDetail = () => {
               {seasons.map((season) => (
                 <Link
                   key={season.id}
-                  to={`/tv/${id}/${titleSlug}/season/${season.season_number}/${(season.name || `season-${season.season_number}`).toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`}
+                  to={{
+                    pathname: `/tv/${id}/${titleSlug}/season/${season.season_number}/${(season.name || `season-${season.season_number}`).toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')}`,
+                    search: location.search,
+                  }}
                   className="group double-shell block transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5"
                 >
                   <div className="double-core flex h-full gap-3 px-3.5 py-3.5">

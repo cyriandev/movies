@@ -57,6 +57,38 @@ const getDerivedShowStatus = (watchedEpisodes, totalEpisodes) => {
   return 'watching';
 };
 
+const initialLibraryLoadRequests = new Map();
+
+const loadInitialLibraryState = async (userId) => {
+  const existingRequest = initialLibraryLoadRequests.get(userId);
+
+  if (existingRequest) {
+    return existingRequest;
+  }
+
+  const request = Promise.all([
+    supabase
+      .from('watchlist_items')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('watched_episodes')
+      .select('*')
+      .eq('user_id', userId)
+      .order('show_tmdb_id', { ascending: true })
+      .order('season_number', { ascending: true })
+      .order('episode_number', { ascending: true }),
+  ]).finally(() => {
+    if (initialLibraryLoadRequests.get(userId) === request) {
+      initialLibraryLoadRequests.delete(userId);
+    }
+  });
+
+  initialLibraryLoadRequests.set(userId, request);
+  return request;
+};
+
 export const LibraryProvider = ({ children }) => {
   const { user, isSupabaseConfigured } = useAuth();
   const [libraryLoading, setLibraryLoading] = useState(false);
@@ -99,20 +131,7 @@ export const LibraryProvider = ({ children }) => {
       setLibraryLoading(true);
       setLibraryError('');
 
-      const [watchlistRes, watchedEpisodesRes] = await Promise.all([
-        supabase
-          .from('watchlist_items')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false }),
-        supabase
-          .from('watched_episodes')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('show_tmdb_id', { ascending: true })
-          .order('season_number', { ascending: true })
-          .order('episode_number', { ascending: true }),
-      ]);
+      const [watchlistRes, watchedEpisodesRes] = await loadInitialLibraryState(user.id);
 
       if (!active) {
         return;

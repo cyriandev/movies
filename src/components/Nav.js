@@ -36,6 +36,12 @@ const Nav = ({ onMenuClick, menuOpen }) => {
         return 'Browse movies';
     }, [location.pathname]);
 
+    const getBrowseDestination = (pathname) => (
+        (pathname === '/movies' || pathname === '/tv') && location.search
+            ? { pathname, search: location.search }
+            : pathname
+    );
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (q.trim()) {
@@ -72,7 +78,7 @@ const Nav = ({ onMenuClick, menuOpen }) => {
                         {links.map((link) => (
                             <NavLink
                                 key={link.to}
-                                to={link.to}
+                                to={getBrowseDestination(link.to)}
                                 end={link.to === '/'}
                                 className={({ isActive }) =>
                                     `tab-pill ${isActive ? 'tab-pill-active' : ''}`

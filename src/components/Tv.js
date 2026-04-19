@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useState, useMemo, useRef } from 'react';
+import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { RiLoader4Line } from 'react-icons/ri';
 import TvContext from '../context/tv/tvContext';
 import TvItem from './TvItem';
 import HeroSlider from './HeroSlider';
@@ -38,10 +39,6 @@ const Tv = () => {
     const [activeTab, setActiveTab] = useState(initialTab);
     const [selectedGenres, setSelectedGenres] = useState([]);
     const [sortBy, setSortBy] = useState('default');
-    const fetchedPagesRef = useRef({
-        popular: new Set(),
-        top_rated: new Set(),
-    });
     const [pageByTab, setPageByTab] = useState(() => ({
         popular: initialTab === 'popular' ? initialPage : 1,
         top_rated: initialTab === 'top_rated' ? initialPage : 1,
@@ -54,24 +51,15 @@ const Tv = () => {
     }, []);
 
     useEffect(() => {
-        if (popular.length > 0 && popular_page > 0) {
-            fetchedPagesRef.current.popular.add(popular_page);
-        }
-
-        if (top_rated.length > 0 && top_rated_page > 0) {
-            fetchedPagesRef.current.top_rated.add(top_rated_page);
-        }
-    }, [popular, popular_page, top_rated, top_rated_page]);
-
-    useEffect(() => {
         const nextPage = pageByTab[activeTab];
-        const fetchedPages = fetchedPagesRef.current[activeTab];
 
-        if (fetchedPages.has(nextPage)) {
+        if (activeTab === 'popular' && popular_page === nextPage && popular.length > 0) {
             return;
         }
 
-        fetchedPages.add(nextPage);
+        if (activeTab === 'top_rated' && top_rated_page === nextPage && top_rated.length > 0) {
+            return;
+        }
 
         if (activeTab === 'popular') {
             getPopular(nextPage);
@@ -79,7 +67,10 @@ const Tv = () => {
         }
 
         getTopRated(nextPage);
-    }, [activeTab, getPopular, getTopRated, pageByTab]);
+        // getPopular/getTopRated come from context providers and change identity after dispatches.
+        // Depending on them here retriggers the effect into a fetch loop in App-level renders.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeTab, pageByTab, popular.length, popular_page, top_rated.length, top_rated_page]);
 
     const sourceData = activeTab === 'popular' ? popular : top_rated;
     const loading = activeTab === 'popular' ? popular_loading : top_rated_loading;
@@ -91,7 +82,7 @@ const Tv = () => {
             return;
         }
 
-        const nextParams = new URLSearchParams();
+        const nextParams = new URLSearchParams(searchParams);
         nextParams.set('tab', activeTab);
         nextParams.set('page', String(currentPage));
         setSearchParams(nextParams, { replace: true });
@@ -121,7 +112,7 @@ const Tv = () => {
     };
 
     const handlePageChange = (nextPage) => {
-        if (nextPage < 1 || nextPage > totalPages) {
+        if (nextPage < 1 || nextPage > totalPages || nextPage === currentPage) {
             return;
         }
 
@@ -129,6 +120,7 @@ const Tv = () => {
             ...prev,
             [activeTab]: nextPage,
         }));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     return (
@@ -180,7 +172,7 @@ const Tv = () => {
             </Reveal>
 
             <Reveal delay={180}>
-                {loading ? (
+                {loading && sourceData.length === 0 ? (
                     <div className="double-shell">
                         <div className="double-core flex h-64 items-center justify-center">
                             <div className="spinner" />
@@ -195,19 +187,30 @@ const Tv = () => {
                         </div>
                     </div>
                 ) : (
-                    <>
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                    <div className="relative space-y-6">
+                        <div
+                            className={`grid grid-cols-1 gap-4 transition-opacity duration-300 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 ${loading ? 'opacity-45' : 'opacity-100'}`}
+                            aria-busy={loading}
+                        >
                             {filteredShows.map((tv) => (
                                 <TvItem key={tv.id} tv={tv} />
                             ))}
                         </div>
+                        {loading && (
+                            <div className="pointer-events-none absolute inset-0 flex items-start justify-center">
+                                <div className="inline-flex items-center gap-2 rounded-full bg-[#242526]/94 px-3 py-2 text-[0.68rem] uppercase tracking-[0.2em] text-[#f5f6fb] ring-1 ring-white/10 backdrop-blur-md">
+                                    <RiLoader4Line className="animate-spin" size={14} />
+                                    Loading page
+                                </div>
+                            </div>
+                        )}
                         <PaginationControls
                             label={activeTab === 'popular' ? 'Popular series' : 'Top rated series'}
                             currentPage={currentPage}
                             totalPages={totalPages}
                             onPageChange={handlePageChange}
                         />
-                    </>
+                    </div>
                 )}
             </Reveal>
         </div>

@@ -25,6 +25,10 @@ const LocationProbe = () => {
   return <div data-testid="location-search">{location.search}</div>;
 };
 
+beforeEach(() => {
+  window.scrollTo = jest.fn();
+});
+
 test('requests the next tv page from the active tab', () => {
   const getOnAir = jest.fn();
   const getTopRated = jest.fn();
@@ -61,6 +65,7 @@ test('requests the next tv page from the active tab', () => {
   fireEvent.click(screen.getByRole('button', { name: /next page for popular series/i }));
 
   expect(getPopular).toHaveBeenCalledWith(2);
+  expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
   expect(screen.getByTestId('location-search')).toHaveTextContent('tab=popular');
   expect(screen.getByTestId('location-search')).toHaveTextContent('page=2');
 });
@@ -146,4 +151,105 @@ test('shows a 5-page tv pagination window and lets you jump to a page', () => {
   fireEvent.click(screen.getByRole('button', { name: /go to page 4 for popular series/i }));
 
   expect(getPopular).toHaveBeenCalledWith(4);
+});
+
+test('refetches tv data when returning to a previously visited page', () => {
+  const getOnAir = jest.fn();
+  const getTopRated = jest.fn();
+  const getPopular = jest.fn();
+  const getTvGenres = jest.fn();
+
+  const { rerender } = render(
+    <MemoryRouter initialEntries={['/tv?tab=popular&page=2']} {...routerProps}>
+      <TvContext.Provider
+        value={{
+          getOnAir,
+          onAir_loading: false,
+          onAir: [],
+          getTopRated,
+          top_rated_loading: false,
+          top_rated: shows,
+          top_rated_page: 1,
+          top_rated_total_pages: 7,
+          getPopular,
+          popular_loading: false,
+          popular: shows,
+          popular_page: 2,
+          popular_total_pages: 11,
+          getTvGenres,
+          tvGenres: [],
+        }}
+      >
+        <Tv />
+      </TvContext.Provider>
+    </MemoryRouter>
+  );
+
+  rerender(
+    <MemoryRouter initialEntries={['/tv?tab=popular&page=2']} {...routerProps}>
+      <TvContext.Provider
+        value={{
+          getOnAir,
+          onAir_loading: false,
+          onAir: [],
+          getTopRated,
+          top_rated_loading: false,
+          top_rated: shows,
+          top_rated_page: 1,
+          top_rated_total_pages: 7,
+          getPopular,
+          popular_loading: false,
+          popular: shows,
+          popular_page: 3,
+          popular_total_pages: 11,
+          getTvGenres,
+          tvGenres: [],
+        }}
+      >
+        <Tv />
+      </TvContext.Provider>
+    </MemoryRouter>
+  );
+
+  expect(getPopular).toHaveBeenCalledWith(2);
+});
+
+test('preserves unrelated tv query params when pagination state updates', () => {
+  const getOnAir = jest.fn();
+  const getTopRated = jest.fn();
+  const getPopular = jest.fn();
+  const getTvGenres = jest.fn();
+
+  render(
+    <MemoryRouter initialEntries={['/tv?tab=popular&page=3&view=grid']} {...routerProps}>
+      <TvContext.Provider
+        value={{
+          getOnAir,
+          onAir_loading: false,
+          onAir: [],
+          getTopRated,
+          top_rated_loading: false,
+          top_rated: shows,
+          top_rated_page: 3,
+          top_rated_total_pages: 7,
+          getPopular,
+          popular_loading: false,
+          popular: shows,
+          popular_page: 3,
+          popular_total_pages: 11,
+          getTvGenres,
+          tvGenres: [],
+        }}
+      >
+        <Tv />
+        <LocationProbe />
+      </TvContext.Provider>
+    </MemoryRouter>
+  );
+
+  fireEvent.click(screen.getByRole('button', { name: /top rated/i }));
+
+  expect(screen.getByTestId('location-search')).toHaveTextContent('tab=top_rated');
+  expect(screen.getByTestId('location-search')).toHaveTextContent('page=1');
+  expect(screen.getByTestId('location-search')).toHaveTextContent('view=grid');
 });

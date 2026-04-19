@@ -18,6 +18,10 @@ const TvItem = ({ tv }) => {
     const watchlistPending = isActionPending(`watchlist:tv:${tv.id}`);
     const originalLanguage = tv.original_language ? tv.original_language.toUpperCase() : '';
     const yearLabel = tv.first_air_date ? moment(tv.first_air_date).format('YYYY') : 'Upcoming';
+    const detailLink =
+        location.pathname === '/tv'
+            ? { pathname: `/tv/${tv.id}/${slug}`, search: location.search }
+            : `/tv/${tv.id}/${slug}`;
 
     const handleWatchlistToggle = async (event) => {
         event.preventDefault();
@@ -32,7 +36,7 @@ const TvItem = ({ tv }) => {
     };
 
     return (
-        <Link to={`/tv/${tv.id}/${slug}`} className="group block">
+        <Link to={detailLink} className="group block">
             <div className="double-shell h-full transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-y-1.5">
                 <div className="double-core flex h-full flex-col">
                     <div className="relative aspect-[0.78] overflow-hidden bg-[#232432]">

@@ -27,6 +27,10 @@ const LocationProbe = () => {
   return <div data-testid="location-search">{location.search}</div>;
 };
 
+beforeEach(() => {
+  window.scrollTo = jest.fn();
+});
+
 test('requests the next movie page from the active tab', () => {
   const getPlaying = jest.fn();
   const getTopRated = jest.fn();
@@ -63,6 +67,7 @@ test('requests the next movie page from the active tab', () => {
   fireEvent.click(screen.getByRole('button', { name: /go to page 2 for popular movies/i }));
 
   expect(getPopular).toHaveBeenCalledWith(2);
+  expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
   expect(screen.getByTestId('location-search')).toHaveTextContent('tab=popular');
   expect(screen.getByTestId('location-search')).toHaveTextContent('page=2');
 });
@@ -148,4 +153,105 @@ test('shows a 5-page movie pagination window and lets you jump to a page', () =>
   fireEvent.click(screen.getByRole('button', { name: /go to page 4 for popular movies/i }));
 
   expect(getPopular).toHaveBeenCalledWith(4);
+});
+
+test('refetches movie data when returning to a previously visited page', () => {
+  const getPlaying = jest.fn();
+  const getTopRated = jest.fn();
+  const getPopular = jest.fn();
+  const getGenres = jest.fn();
+
+  const { rerender } = render(
+    <MemoryRouter initialEntries={['/movies?tab=popular&page=2']} {...routerProps}>
+      <MoviesContext.Provider
+        value={{
+          getPlaying,
+          playing_loading: false,
+          playing: [],
+          getTopRated,
+          top_rated_loading: false,
+          top_rated: movies,
+          top_rated_page: 1,
+          top_rated_total_pages: 8,
+          getPopular,
+          popular_loading: false,
+          popular: movies,
+          popular_page: 2,
+          popular_total_pages: 12,
+          getGenres,
+          genres: [],
+        }}
+      >
+        <Landing />
+      </MoviesContext.Provider>
+    </MemoryRouter>
+  );
+
+  rerender(
+    <MemoryRouter initialEntries={['/movies?tab=popular&page=2']} {...routerProps}>
+      <MoviesContext.Provider
+        value={{
+          getPlaying,
+          playing_loading: false,
+          playing: [],
+          getTopRated,
+          top_rated_loading: false,
+          top_rated: movies,
+          top_rated_page: 1,
+          top_rated_total_pages: 8,
+          getPopular,
+          popular_loading: false,
+          popular: movies,
+          popular_page: 3,
+          popular_total_pages: 12,
+          getGenres,
+          genres: [],
+        }}
+      >
+        <Landing />
+      </MoviesContext.Provider>
+    </MemoryRouter>
+  );
+
+  expect(getPopular).toHaveBeenCalledWith(2);
+});
+
+test('preserves unrelated movie query params when pagination state updates', () => {
+  const getPlaying = jest.fn();
+  const getTopRated = jest.fn();
+  const getPopular = jest.fn();
+  const getGenres = jest.fn();
+
+  render(
+    <MemoryRouter initialEntries={['/movies?tab=popular&page=3&view=grid']} {...routerProps}>
+      <MoviesContext.Provider
+        value={{
+          getPlaying,
+          playing_loading: false,
+          playing: [],
+          getTopRated,
+          top_rated_loading: false,
+          top_rated: movies,
+          top_rated_page: 3,
+          top_rated_total_pages: 8,
+          getPopular,
+          popular_loading: false,
+          popular: movies,
+          popular_page: 3,
+          popular_total_pages: 12,
+          getGenres,
+          genres: [],
+        }}
+      >
+        <Landing />
+        <LocationProbe />
+      </MoviesContext.Provider>
+    </MemoryRouter>
+  );
+
+  fireEvent.click(screen.getByRole('button', { name: /top rated/i }));
+
+  expect(screen.getByTestId('location-search')).toHaveTextContent('tab=top_rated');
+  expect(screen.getByTestId('location-search')).toHaveTextContent('page=1');
+  expect(screen.getByTestId('location-search')).toHaveTextContent('view=grid');
 });

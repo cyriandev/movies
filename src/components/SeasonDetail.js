@@ -72,6 +72,9 @@ const SeasonDetail = () => {
       : `${showProgress.watched_episodes || 0} series episodes watched`;
   const seasonActionPending = isActionPending(`season:${showId}:${Number(seasonNumber)}`);
   const allSeasonEpisodesWatched = episodes.length > 0 && seasonWatchedEpisodes >= episodes.length;
+  const backToShow = location.search
+    ? { pathname: `/tv/${id}/${showSlug}`, search: location.search }
+    : `/tv/${id}/${showSlug}`;
 
   const metadata = [
     {
@@ -142,7 +145,7 @@ const SeasonDetail = () => {
                 <div>
                   <div className="flex flex-wrap items-center gap-2.5">
                     <Link
-                      to={`/tv/${id}/${showSlug}`}
+                      to={backToShow}
                       className="inline-flex min-h-[2.5rem] items-center gap-2 rounded-full bg-black/78 px-3.5 py-2 text-[0.68rem] uppercase tracking-[0.2em] text-[#f5f6fb] shadow-[0_2px_8px_rgba(0,0,0,0.16)] ring-1 ring-white/10 backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:bg-black/82"
                     >
                       <RiArrowLeftLine size={16} />

@@ -14,9 +14,13 @@ const defaultAuthContext = {
 
 const AuthContext = createContext(defaultAuthContext);
 
+const isSameSession = (currentSession, nextSession) =>
+  currentSession?.access_token === nextSession?.access_token &&
+  currentSession?.refresh_token === nextSession?.refresh_token &&
+  currentSession?.user?.id === nextSession?.user?.id;
+
 export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
-  const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
@@ -27,16 +31,20 @@ export const AuthProvider = ({ children }) => {
 
     let active = true;
 
-    const initialize = async () => {
-      const { data } = await supabase.auth.getSession();
-
+    const applySession = (nextSession) => {
       if (!active) {
         return;
       }
 
-      setSession(data.session);
-      setUser(data.session?.user || null);
+      setSession((currentSession) =>
+        isSameSession(currentSession, nextSession) ? currentSession : nextSession
+      );
       setAuthLoading(false);
+    };
+
+    const initialize = async () => {
+      const { data } = await supabase.auth.getSession();
+      applySession(data.session);
     };
 
     initialize();
@@ -44,9 +52,7 @@ export const AuthProvider = ({ children }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setUser(nextSession?.user || null);
-      setAuthLoading(false);
+      applySession(nextSession);
     });
 
     return () => {
@@ -54,6 +60,8 @@ export const AuthProvider = ({ children }) => {
       subscription.unsubscribe();
     };
   }, []);
+
+  const user = session?.user || null;
 
   const sendEmailOtp = async ({ email, nextPath = '/watchlist' }) => {
     if (!supabase) {

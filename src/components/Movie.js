@@ -22,6 +22,10 @@ export const Movie = ({ movie }) => {
   const statusPending = watchlistPending || moviePending;
   const originalLanguage = movie.original_language ? movie.original_language.toUpperCase() : '';
   const yearLabel = movie.release_date ? moment(movie.release_date).format('YYYY') : 'Coming soon';
+  const detailLink =
+    location.pathname === '/movies'
+      ? { pathname: `/movies/${movie.id}/${slug}`, search: location.search }
+      : `/movies/${movie.id}/${slug}`;
 
   const handleStatusSelect = async (value) => {
     if (!user) {
@@ -38,7 +42,7 @@ export const Movie = ({ movie }) => {
   };
 
   return (
-    <Link to={`/movies/${movie.id}/${slug}`} className="group block h-full">
+    <Link to={detailLink} className="group block h-full">
       <div className="double-shell h-full transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-y-1.5">
         <div className="double-core flex h-full flex-col">
           <div className="relative aspect-[0.78] overflow-hidden bg-[#232432]">
